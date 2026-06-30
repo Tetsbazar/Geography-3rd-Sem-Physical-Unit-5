@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Bazar — Geography 3rd Sem | Unit 5 | Ch 5 | জীবমণ্ডল</title>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Syne',sans-serif;background:#f0faf4;min-height:100vh;color:#1c2e24}
+.top-bar{background:#1a7a4a;padding:0.8rem 1.5rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+.top-logo{font-size:1.1rem;font-weight:800;color:white}.top-logo span{color:#f9a825}
+.timer-box{background:rgba(255,255,255,0.15);border-radius:8px;padding:0.4rem 1rem;display:flex;align-items:center;gap:6px;font-size:1rem;font-weight:700;color:white}
+.timer-box.danger{background:#dc3545}
+.main{max-width:820px;margin:0 auto;padding:1.5rem 1rem}
+.hub-header{text-align:center;margin-bottom:2rem}
+.hub-header h1{font-family:'Tiro Bangla',serif;font-size:1.8rem;color:#1c2e24}
+.hub-header p{font-family:'Tiro Bangla',serif;font-size:0.95rem;color:#5a7a66;margin-top:0.3rem}
+.set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem}
+.set-card{background:white;border-radius:14px;padding:1.5rem;border:1.5px solid #c5dccb;transition:all 0.2s;cursor:pointer;color:#1c2e24;box-shadow:0 2px 8px rgba(26,122,74,0.06)}
+.set-card:hover{transform:translateY(-3px);border-color:#1a7a4a;box-shadow:0 6px 20px rgba(26,122,74,0.12)}
+.set-card .icon{font-size:2.2rem;margin-bottom:0.3rem}
+.set-card .set-num{font-weight:700;font-size:1.1rem;color:#1a7a4a}
+.set-card .set-title{font-family:'Tiro Bangla',serif;font-size:0.85rem;color:#5a7a66;margin:0.2rem 0 0.5rem}
+.set-card .set-meta{display:flex;gap:1rem;font-size:0.7rem;color:#5a7a66}
+.set-card .set-meta span{background:#f0faf4;padding:0.15rem 0.6rem;border-radius:4px}
+.set-card .attempt-badge{font-size:0.7rem;color:#dc3545;font-weight:600;margin-top:0.3rem}
+.set-card.locked{opacity:0.5;cursor:not-allowed;border-color:#dc3545}
+.set-card.locked:hover{transform:none;box-shadow:none}
+.quiz-info{background:white;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.2rem;border:1px solid #c5dccb;display:flex;gap:1rem;flex-wrap:wrap}
+.info-item{font-family:'Tiro Bangla',serif;font-size:0.85rem;color:#5a7a66}
+.info-item strong{color:#1a7a4a}
+.progress-wrap{background:#c5dccb;border-radius:4px;height:6px;margin-bottom:1.2rem;overflow:hidden}
+.progress-fill{height:100%;background:#1a7a4a;border-radius:4px;transition:width 0.3s}
+.q-card{background:white;border-radius:14px;padding:1.4rem;margin-bottom:1rem;border:1px solid #c5dccb;box-shadow:0 2px 10px rgba(26,122,74,0.06)}
+.q-num{font-size:0.75rem;font-weight:700;color:#e8730a;letter-spacing:1px;text-transform:uppercase;margin-bottom:0.6rem}
+.q-text{font-family:'Tiro Bangla',serif;font-size:1rem;color:#1c2e24;line-height:1.7;margin-bottom:1.1rem}
+.opts{display:flex;flex-direction:column;gap:0.6rem}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:0.7rem 1rem;border:1.5px solid #c5dccb;border-radius:10px;cursor:pointer;transition:all 0.15s;background:white;text-align:left;width:100%;font-family:inherit}
+.opt:hover:not(.disabled){border-color:#1a7a4a;background:#f0faf4}
+.opt-circle{min-width:28px;height:28px;border-radius:50%;border:1.5px solid #c5dccb;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#5a7a66;flex-shrink:0;transition:all 0.15s}
+.opt-text{font-family:'Tiro Bangla',serif;font-size:0.92rem;color:#1c2e24;line-height:1.6;padding-top:2px}
+.opt.correct{border-color:#1a7a4a;background:#e8f7ef}
+.opt.correct .opt-circle{background:#1a7a4a;border-color:#1a7a4a;color:white}
+.opt.wrong{border-color:#dc3545;background:#fdf0f0}
+.opt.wrong .opt-circle{background:#dc3545;border-color:#dc3545;color:white}
+.opt.disabled{cursor:default}
+.explanation{background:#f0faf4;border-left:3px solid #1a7a4a;border-radius:0 8px 8px 0;padding:0.8rem 1rem;margin-top:0.8rem;display:none}
+.explanation.show{display:block}
+.explanation p{font-family:'Tiro Bangla',serif;font-size:0.88rem;color:#2c4035;line-height:1.7}
+.explanation strong{color:#1a7a4a}
+.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:0.8rem}
+.score-show{font-family:'Tiro Bangla',serif;font-size:0.85rem;color:#5a7a66}
+.next-btn{background:#1a7a4a;color:white;border:none;padding:0.6rem 1.4rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:0.9rem;cursor:pointer;transition:all 0.15s}
+.next-btn:hover{background:#2aad68}
+.next-btn:disabled{background:#c5dccb;cursor:default}
+.result-wrap{background:white;border-radius:14px;padding:2rem;text-align:center;border:1px solid #c5dccb;display:none}
+.result-wrap.show{display:block}
+.result-icon{font-size:3rem;margin-bottom:0.5rem}
+.result-score{font-size:3.5rem;font-weight:800;color:#1a7a4a}
+.result-total{font-size:1rem;color:#5a7a66;margin-bottom:0.5rem;font-family:'Tiro Bangla',serif}
+.result-grade{font-size:1.2rem;font-weight:600;color:#1c2e24;margin-bottom:1.5rem;font-family:'Tiro Bangla',serif}
+.result-bars{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem;margin-bottom:1.5rem}
+.result-bar{background:#f0faf4;border-radius:10px;padding:0.8rem;text-align:center}
+.rb-num{font-size:1.4rem;font-weight:800}
+.rb-label{font-family:'Tiro Bangla',serif;font-size:0.8rem;color:#5a7a66;margin-top:0.2rem}
+.retry-btn{background:#1a7a4a;color:white;border:none;padding:0.75rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer;margin-right:0.5rem}
+.retry-btn:disabled{background:#c5dccb;cursor:not-allowed}
+.review-btn{background:white;color:#1a7a4a;border:1.5px solid #1a7a4a;padding:0.75rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer}
+.back-btn{background:white;color:#5a7a66;border:1.5px solid #c5dccb;padding:0.75rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer;margin-top:0.6rem}
+.login-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:999;display:none}
+.login-overlay.active{display:flex}
+.login-modal{background:white;border-radius:16px;padding:2.5rem;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.login-modal h2{font-family:'Tiro Bangla',serif;font-size:1.3rem;color:#1c2e24;text-align:center;margin-bottom:0.3rem}
+.login-modal p{font-family:'Tiro Bangla',serif;font-size:0.85rem;color:#5a7a66;text-align:center;margin-bottom:1.5rem}
+.login-modal label{font-size:0.8rem;font-weight:600;color:#1c2e24;display:block;margin-bottom:0.3rem}
+.login-modal input{width:100%;padding:0.7rem 1rem;border:1.5px solid #c5dccb;border-radius:8px;font-size:0.95rem;margin-bottom:1rem;font-family:'Tiro Bangla',serif}
+.login-modal input:focus{outline:none;border-color:#1a7a4a}
+.login-modal .login-btn{width:100%;background:#1a7a4a;color:white;border:none;padding:0.75rem;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Tiro Bangla',serif}
+.login-modal .login-btn:hover{background:#2aad68}
+.login-modal .login-btn:disabled{background:#c5dccb;cursor:not-allowed}
+.login-modal .error-msg{color:#dc3545;font-size:0.8rem;text-align:center;margin-top:0.5rem;font-family:'Tiro Bangla',serif;display:none}
+.login-modal .limit-info{background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:0.6rem 1rem;margin-bottom:1rem;font-family:'Tiro Bangla',serif;font-size:0.8rem;color:#856404;display:none}
+.login-modal .set-name-display{background:#f0faf4;border-radius:8px;padding:0.5rem;text-align:center;margin-bottom:1rem;font-family:'Tiro Bangla',serif;font-size:0.9rem;color:#1a7a4a;font-weight:600}
+.hidden{display:none !important}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-logo">Test <span>Bazar</span></div>
+  <div class="timer-box" id="timerBox">⏱ <span id="timerDisplay">10:00</span></div>
+</div>
+
+<div class="main">
+
+  <!-- ===== LOGIN OVERLAY ===== -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-modal">
+      <h2>🔐 লগইন করুন</h2>
+      <p>Test শুরু করতে আপনার ইউজারনেম ও পাসওয়ার্ড দিন</p>
+      <div class="set-name-display" id="loginSetName">📚 Set 1</div>
+      <div class="limit-info" id="limitInfo">⚠️ <span id="limitMsg"></span></div>
+      <label>ইউজারনেম</label>
+      <input type="text" id="loginUsername" placeholder="আপনার ইউজারনেম লিখুন">
+      <label>পাসওয়ার্ড</label>
+      <input type="password" id="loginPassword" placeholder="আপনার পাসওয়ার্ড লিখুন" onkeydown="if(event.key==='Enter') doLoginFromSet()">
+      <button class="login-btn" id="loginBtn" onclick="doLoginFromSet()">✅ লগইন করে Test শুরু করো</button>
+      <div class="error-msg" id="loginError">❌ ভুল ইউজারনেম বা পাসওয়ার্ড। আবার চেষ্টা করুন।</div>
+    </div>
+  </div>
+
+  <!-- ===== HUB PAGE ===== -->
+  <div id="hubPage">
+    <div class="hub-header">
+      <h1>📚 Unit 5 — জীবমণ্ডল (Biosphere)</h1>
+      <p>অধ্যায় ৫: বাস্তুতন্ত্র, খাদ্যশৃঙ্খল, শক্তিপ্রবাহ ও পুষ্টিস্তর — নিচের সেটগুলো থেকে বেছে নিন। Test শুরু করতে সেটে ক্লিক করুন এবং লগইন করুন।</p>
+      <div id="hubUserInfo" style="font-family:'Tiro Bangla',serif;font-size:0.85rem;color:#5a7a66;margin-top:0.5rem;"></div>
+    </div>
+    <div class="set-grid" id="setGrid"></div>
+  </div>
+
+  <!-- ===== TEST AREA ===== -->
+  <div id="testArea" class="hidden">
+    <div class="quiz-info">
+      <div class="info-item">🎓 <strong id="testSetName">ভূগোল</strong> — Unit 5 | Ch 5 | <span id="testSetLabel">Set 1</span></div>
+      <div class="info-item">📝 <span id="testTopic">জীবমণ্ডল</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="q-card" id="qCard">
+      <div class="q-num" id="qNum">প্রশ্ন ১ / ১৫</div>
+      <div class="q-text" id="qText"></div>
+      <div class="opts" id="qOpts"></div>
+      <div class="explanation" id="explanation"><p id="explanationText"></p></div>
+      <div class="nav-row">
+        <div class="score-show" id="scoreShow">সঠিক: ০ | ভুল: ০</div>
+        <button class="next-btn" id="nextBtn" onclick="nextQ()" disabled>পরবর্তী →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== RESULT AREA ===== -->
+  <div class="result-wrap" id="resultWrap">
+    <div class="result-icon" id="resultIcon"></div>
+    <div class="result-score" id="finalScore"></div>
+    <div class="result-total">/ ১৫</div>
+    <div class="result-grade" id="resultGrade"></div>
+    <div class="result-bars">
+      <div class="result-bar"><div class="rb-num" id="rbCorrect" style="color:#1a7a4a"></div><div class="rb-label">সঠিক</div></div>
+      <div class="result-bar"><div class="rb-num" id="rbWrong" style="color:#dc3545"></div><div class="rb-label">ভুল</div></div>
+      <div class="result-bar"><div class="rb-num" id="rbPct" style="color:#e8730a"></div><div class="rb-label">স্কোর</div></div>
+    </div>
+    <div id="attemptInfo" style="font-family:'Tiro Bangla',serif;font-size:0.85rem;color:#5a7a66;margin-bottom:1rem;"></div>
+    <button class="retry-btn" id="retryBtn" onclick="retryQuiz()">আবার চেষ্টা করো</button>
+    <button class="review-btn" onclick="showReview()">উত্তর দেখো</button>
+    <br>
+    <button class="back-btn" onclick="goToHub()">← Hub এ ফিরে যাও</button>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+//  ইউজার ডেটাবেস
+// ============================================================
+const MAX_ATTEMPTS = 10;
+const TOTAL_SETS = 7;
+
+const userData = [
+  {username:"alfa_romeo", password:"ARx7P29m"},
+  {username:"santos", password:"St8Qv41L"},
+  {username:"falcon", password:"Fc3MZ92k"},
+  {username:"titan", password:"Ti6Rp84W"},
+  {username:"matrix", password:"Mx5Kd73N"},
+  {username:"phoenix", password:"Ph9Js28V"},
+  {username:"cobra", password:"Cb4Ln65X"},
+  {username:"shadow", password:"Sh7Wp19Q"},
+  {username:"rocket", password:"Rc2Ty86M"},
+  {username:"warrior", password:"Wr8Az34K"},
+  {username:"eagle", password:"Eg5Xq72P"},
+  {username:"thunder", password:"Th1Vk93R"},
+  {username:"dragon", password:"Dr6Hm48N"},
+  {username:"panther", password:"Pa9Nc25J"},
+  {username:"viking", password:"Vi4Qs87L"},
+  {username:"hunter", password:"Hu7Bp31X"},
+  {username:"legend", password:"Le2Mz64T"},
+  {username:"ranger", password:"Ra8Kd95W"},
+  {username:"knight", password:"Kn3Xp57Q"},
+  {username:"turbo", password:"Tu6Lv21N"},
+  {username:"alpha", password:"Ap9Rm83K"},
+  {username:"bravo", password:"Br5Yt42M"},
+  {username:"charlie", password:"Ch7Wq16P"},
+  {username:"delta", password:"De4Nk78X"},
+  {username:"echo", password:"Ec8Jp35V"},
+  {username:"foxtrot", password:"Fx2Lm94Q"},
+  {username:"gamma", password:"Ga6Xs27T"},
+  {username:"helix", password:"He1Vp85N"},
+  {username:"inferno", password:"In9Qk43L"},
+  {username:"jaguar", password:"Ja5Mz72W"},
+  {username:"karma", password:"Ka8Rp14X"},
+  {username:"laser", password:"La3Tn67Q"},
+  {username:"meteor", password:"Me7Wx29P"},
+  {username:"nova", password:"No4Kz86M"},
+  {username:"omega", password:"Om2Lp53V"},
+  {username:"pegasus", password:"Pe9Xq71N"},
+  {username:"quantum", password:"Qu5Vr38K"},
+  {username:"rebel", password:"Re8Mz24T"},
+  {username:"storm", password:"St1Kp97W"},
+  {username:"tornado", password:"To6Nx45Q"},
+  {username:"ultra", password:"Ul3Wp82M"},
+  {username:"vector", password:"Ve7Lq19X"},
+  {username:"wolf", password:"Wo4Rm63P"},
+  {username:"xenon", password:"Xe9Tk25N"},
+  {username:"yodha", password:"Yo2Vz78K"},
+  {username:"zeus", password:"Ze8Mp41Q"},
+  {username:"atlas", password:"At5Lx93W"},
+  {username:"blaze", password:"Bl1Qn67M"},
+  {username:"cyclone", password:"Cy7Rp34T"},
+  {username:"dynamo", password:"Dy4Wk82X"},
+  {username:"apollo", password:"Ap7Kx94Lm"},
+  {username:"archer", password:"Ar3Vp62Qn"},
+  {username:"asteroid", password:"As8Tm15Rw"},
+  {username:"bandit", password:"Ba5Qz71Kp"},
+  {username:"bison", password:"Bi9Ln34Xt"},
+  {username:"bullet", password:"Bu2Wr86Mv"},
+  {username:"canyon", password:"Ca6Xp29Qk"},
+  {username:"captain", password:"Cp1Mz75Ln"},
+  {username:"comet", password:"Co8Tk43Wp"},
+  {username:"cyclonex", password:"Cy4Vr92Km"},
+  {username:"diesel", password:"Di7Lp18Qx"},
+  {username:"domino", password:"Do3Wn67Rt"},
+  {username:"duke", password:"Du9Kx25Mv"},
+  {username:"empire", password:"Em5Qp84Ln"},
+  {username:"explorer", password:"Ex2Vz39Kt"},
+  {username:"fighter", password:"Fi8Lm71Qw"},
+  {username:"galaxy", password:"Ga4Tk26Xp"},
+  {username:"gladiator", password:"Gl7Wp95Mn"},
+  {username:"gravity", password:"Gr1Nx53Lq"},
+  {username:"hawk", password:"Ha9Kz42Rt"},
+  {username:"horizon", password:"Ho5Vm87Xp"},
+  {username:"icefire", password:"Ic3Lp16Qn"},
+  {username:"impact", password:"Im8Wr74Kt"},
+  {username:"ironman", password:"Ir2Xq95Mv"},
+  {username:"jetstar", password:"Je6Nk38Lp"},
+  {username:"kingston", password:"Ki1Vp72Qw"},
+  {username:"lightning", password:"Li9Tm45Rx"},
+  {username:"majestic", password:"Ma4Kp83Ln"},
+  {username:"monster", password:"Mo7Wz21Qt"},
+  {username:"neptune", password:"Ne3Lx96Mv"},
+  {username:"ninja", password:"Ni8Qr54Kp"},
+  {username:"orbit", password:"Or2Vp73Ln"},
+  {username:"patriot", password:"Pa6Tk18Qw"},
+  {username:"pioneer", password:"Pi1Xm85Rt"},
+  {username:"predator", password:"Pr9Lq47Kv"},
+  {username:"proton", password:"Pt4Wn62Mx"},
+  {username:"rapid", password:"Ra7Kx93Lp"},
+  {username:"samurai", password:"Sa3Vp25Qn"},
+  {username:"sniper", password:"Sn8Tm71Rw"},
+  {username:"solaris", password:"So2Qk84Mv"},
+  {username:"spartan", password:"Sp6Ln39Xt"},
+  {username:"striker", password:"St1Wr57Kp"},
+  {username:"summit", password:"Su9Xp26Lm"},
+  {username:"taurus", password:"Ta5Vz91Qw"},
+  {username:"tempest", password:"Te3Kp48Rt"},
+  {username:"trident", password:"Tr8Wm72Ln"},
+  {username:"valiant", password:"Va2Nx35Qk"},
+  {username:"voyager", password:"Vo6Lp97Mx"},
+  {username:"wildfire", password:"Wi1Tk64Rv"},
+  {username:"zenith", password:"Ze9Qx28Lp"}
+];
+
+// ============================================================
+//  localStorage-এ attempts সংরক্ষণ
+// ============================================================
+function getAttempts() {
+  try {
+    const data = localStorage.getItem('testBazarAttempts');
+    return data ? JSON.parse(data) : {};
+  } catch { return {}; }
+}
+
+function saveAttempts(attempts) {
+  localStorage.setItem('testBazarAttempts', JSON.stringify(attempts));
+}
+
+function getAttemptCount(username, setId) {
+  const attempts = getAttempts();
+  const key = username + '|' + setId;
+  return attempts[key] || 0;
+}
+
+function incrementAttempt(username, setId) {
+  const attempts = getAttempts();
+  const key = username + '|' + setId;
+  attempts[key] = (attempts[key] || 0) + 1;
+  saveAttempts(attempts);
+  return attempts[key];
+}
+
+// ============================================================
+//  সব সেটের ডেটা (Set 1-7 for Geography Chapter 5: জীবমণ্ডল)
+// ============================================================
+const allSets = {
+  1: {
+    name: 'Set 1',
+    icon: '🌍',
+    topic: 'জীবমণ্ডল ও বাস্তুতন্ত্রের প্রাথমিক ধারণা',
+    questions: [
+      {q: 'পৃথিবীর সামগ্রিক আয়তনের বিচারে কোন মণ্ডলের অবস্থান অত্যন্ত নগণ্য হলেও এর গুরুত্ব সর্বাধিক?', opts: ['বারিমণ্ডল', 'বায়ুমণ্ডল', 'জীবমণ্ডল (Biosphere)', 'শিলামণ্ডল'], ans: 2, exp: 'পৃথিবীর সামগ্রিক আয়তনের বিচারে জীবমণ্ডলের বিস্তৃতি নগণ্য হলেও এটি সব আলোচনার কেন্দ্রবিন্দুতে থাকে। কারণ, জীবকুলের অস্তিত্ব বিলোপের অর্থই হলো পৃথিবীর মৃত্যু।'},
+      {q: 'শিলা বা মাটির নীচে সাধারণত কত গভীরতা পর্যন্ত জীবমণ্ডলের বিস্তৃতি লক্ষ করা যায়?', opts: ['প্রায় ১ মিটার', 'প্রায় ১০ মিটার', 'প্রায় ১০০ মিটার', 'প্রায় ১০০০ মিটার'], ans: 1, exp: 'মাটি বা শিলামণ্ডলের ভেতরে জীবের অস্তিত্ব খুব একটা গভীরে থাকে না। সাধারণত ভূপৃষ্ঠ থেকে মাটির নীচে প্রায় ১০ মিটার গভীরতা পর্যন্ত জীবমণ্ডলের বিস্তৃতি পরিলক্ষিত হয়।'},
+      {q: 'ভূপৃষ্ঠ থেকে উপরের দিকে বায়ুমণ্ডলে কত উচ্চতা পর্যন্ত জীবের সবচেয়ে বেশি কেন্দ্রীভবন ঘটেছে?', opts: ['৩০০ মিটার', '৩০০ কিমি', '১০০ মিটার', '১৫ কিমি'], ans: 0, exp: 'ভূপৃষ্ঠ থেকে বায়ুমণ্ডলে উপরের দিকে মাত্র ৩০০ মিটার উচ্চতা এবং সমুদ্রের ২০০ মিটার গভীরতা পর্যন্ত জীবের কেন্দ্রীভবন সবচেয়ে বেশি মাত্রায় দেখা যায়।'},
+      {q: 'সমুদ্রজলে বা বারিমণ্ডলে জীবমণ্ডলের নিম্নসীমা বা জীবের অস্তিত্ব প্রধানত কোন বিষয়টির ওপর নির্ভরশীল?', opts: ['সমুদ্রস্রোত ও লবণতা', 'সূর্যালোক ও অক্সিজেন', 'জলের চাপ ও ঘনত্ব', 'নাইট্রোজেন ও তাপমাত্রা'], ans: 1, exp: 'সমুদ্রের জলে সূর্যালোকের প্রবেশযোগ্যতা এবং দ্রবীভূত অক্সিজেনের পরিমাণের ওপর ভিত্তি করেই সামুদ্রিক জীবমণ্ডলের নিম্নসীমা নির্ধারিত হয়।'},
+      {q: '\'জীবমণ্ডল\' (Biosphere) ধারণার প্রথম প্রবর্তন করেন কোন বিজ্ঞানী?', opts: ['ট্যান্সলে', 'আর্নেস্ট হেকেল', 'এডওয়ার্ড সুয়েস', 'লিন্ডেম্যান'], ans: 2, exp: 'অস্ট্রিয়ান ভূতত্ত্ববিদ এডওয়ার্ড সুয়েস (Eduard Suess) ১৮৭৫ সালে সর্বপ্রথম \'জীবমণ্ডল\' বা \'Biosphere\' ধারণার প্রবর্তন করেন।'},
+      {q: 'জীবমণ্ডলকে পৃথিবীর কী মণ্ডল বলা হয়ে থাকে?', opts: ['বাস্তুমণ্ডল বা Ecosphere', 'বারিমণ্ডল', 'মেসোস্ফিয়ার', 'ট্রপোস্ফিয়ার'], ans: 0, exp: 'জীবমণ্ডল হলো পৃথিবীর সমস্ত বাস্তুতন্ত্রের একটি সম্মিলিত রূপ, তাই একে পৃথিবীর \'বাস্তুমণ্ডল\' বা \'Ecosphere\' বলা হয়।'},
+      {q: 'স্থলভাগের ওপর অবস্থিত জীবমণ্ডলকে কী বলা হয়?', opts: ['ফোটিক বায়োস্ফিয়ার', 'পেডো-বায়োস্ফিয়ার (Pedo-biosphere)', 'লোটিক বায়োস্ফিয়ার', 'নেরিটিক বায়োস্ফিয়ার'], ans: 1, exp: 'মাটির ওপর বা স্থলভাগের জীবমণ্ডলকে \'পেডো-বায়োস্ফিয়ার\' বলা হয়, যেখানে স্থলজ উদ্ভিদ ও বিভিন্ন প্রাণীর সমাহার লক্ষ করা যায়।'},
+      {q: 'পরিবেশের জড় ও সজীব উপাদান নিয়ে গঠিত \'ইকোসিস্টেম\' (Ecosystem) শব্দটি প্রথম কে ব্যবহার করেন?', opts: ['এ. জি. ট্যান্সলে (A.G. Tansley)', 'আর্নেস্ট হেকেল', 'ই. পি. ওডাম', 'চার্লস ডারউইন'], ans: 0, exp: '১৯৩৫ সালে ব্রিটিশ বাস্তুবিদ এ. জি. ট্যান্সলে সর্বপ্রথম \'ইকোসিস্টেম\' বা বাস্তুতন্ত্র শব্দটি ব্যবহার করেন।'},
+      {q: 'বাস্তুতন্ত্র (Ecosystem) মূলত কী ধরনের প্রণালী?', opts: ['আবদ্ধ প্রণালী (Closed System)', 'অর্ধমুক্ত প্রণালী', 'উন্মুক্ত প্রণালী (Open System)', 'বিচ্ছিন্ন প্রণালী'], ans: 2, exp: 'বাস্তুতন্ত্রে শক্তি ও পদার্থের উৎপাদন এবং সরবরাহ সবসময় ঘটতে থাকে এবং কাজ করার পর শক্তি বাস্তুতন্ত্র থেকে বেরিয়ে যায়, তাই এটিকে একটি \'উন্মুক্ত প্রণালী\' বলা হয়।'},
+      {q: 'বাস্তুতন্ত্রে শক্তির একমাত্র ও প্রধান উৎস কী?', opts: ['রাসায়নিক শক্তি', 'ভূতাপ শক্তি', 'সূর্যালোক (সৌরশক্তি)', 'জলজ শক্তি'], ans: 2, exp: 'পৃথিবীর যে-কোনো বাস্তুতন্ত্রের চালিকাশক্তি ও শক্তির একমাত্র মূল উৎস হলো সূর্য বা সূর্যালোক, যা সবুজ উদ্ভিদ খাদ্য হিসেবে আবদ্ধ করে।'},
+      {q: 'বইয়ের তথ্য অনুযায়ী, \'ইকোলজি\' (Ecology) শব্দটি কোন ভাষার শব্দ \'oikos\' এবং \'logos\' থেকে এসেছে?', opts: ['গ্রিক শব্দ', 'জার্মান শব্দ', 'লাতিন শব্দ', 'ফরাসি শব্দ'], ans: 1, exp: 'পাঠ্যবইয়ের তথ্য অনুযায়ী (যদিও ঐতিহাসিকভাবে এটি গ্রিক), জার্মান শব্দ \'ওইকোস\' (oikos - ঘর বা বসতি) এবং \'লোগোস\' (logos - অধ্যয়ন) থেকে \'ইকোলজি\' বা বাস্তুবিদ্যা শব্দটি উদ্ভূত হয়েছে।'},
+      {q: 'জার্মান প্রাণীবিজ্ঞানী আর্নেস্ট হেকেল (Ernst Haeckel) \'ইকোলজি\' (Ecology) শব্দটি কত সালে প্রথম ব্যবহার করেন?', opts: ['১৮৩৫ সালে', '১৮৬৬ সালে', '১৮৭৫ সালে', '১৯৩৫ সালে'], ans: 1, exp: 'জার্মান প্রাণীবিজ্ঞানী আর্নেস্ট হেকেল ১৮৬৬ সালে সর্বপ্রথম জীব ও পরিবেশের আন্তঃসম্পর্ক বোঝাতে \'ইকোলজি\' বা বাস্তুবিদ্যা শব্দটি ব্যবহার করেন।'},
+      {q: '\'ইকোলজি\' (Ecology) বা বাস্তুবিদ্যার কার্যকরী একক (functional unit) কাকে বলা হয়?', opts: ['বায়োম', 'জীবভর', 'ইকোসিস্টেম বা বাস্তুতন্ত্র', 'ইকোটোন'], ans: 2, exp: 'জীবগোষ্ঠীর সাথে পরিবেশের জড় উপাদানের আন্তঃক্রিয়ায় যে বসবাসরীতি গড়ে ওঠে, সেই ইকোসিস্টেম বা বাস্তুতন্ত্রই হলো ইকোলজির কার্যকরী একক।'},
+      {q: 'একটি নির্দিষ্ট অঞ্চলে জীবিত উদ্ভিদ ও প্রাণীর মোট শুষ্ক ওজনকে (dry weight) কী বলে?', opts: ['জীবভর (Biomass)', 'ইকোটোন', 'ক্লাইম্যাক্স কমিউনিটি', 'পেডো-বায়োস্ফিয়ার'], ans: 0, exp: 'কোনো একটি নির্দিষ্ট সময়ের সাপেক্ষে একটি বাস্তুতন্ত্রে উপস্থিত সমস্ত জীবিত উদ্ভিদ ও প্রাণীর মোট শুষ্ক ওজনের পরিমাণকে বায়োমাস বা জীবভর বলে।'},
+      {q: 'জলবায়ু দ্বারা প্রভাবিত কোনো এক শ্রেণির জীবগোষ্ঠীর বিশাল সমাবেশযুক্ত অঞ্চলকে কী বলে?', opts: ['ইকোটোন', 'বায়োম (Biome)', 'ইকোক্লাইন', 'নিসে'], ans: 1, exp: 'নির্দিষ্ট জলবায়ু দ্বারা প্রভাবিত বিস্তীর্ণ অঞ্চল জুড়ে গড়ে ওঠা উদ্ভিদ ও প্রাণীর বিশাল জীবমণ্ডলকে বায়োম বলে। যেমন- সাভানা বায়োম, তুন্দ্রা বায়োম ইত্যাদি।'}
+    ]
+  },
+  2: {
+    name: 'Set 2',
+    icon: '🔬',
+    topic: 'বাস্তুতন্ত্রের উপাদান (Components of Ecosystem)',
+    questions: [
+      {q: 'বাস্তুতন্ত্রের উপাদানগুলিকে প্রধানত কয়টি ভাগে ভাগ করা যায়?', opts: ['৩টি', '২টি (জড় ও সজীব)', '৪টি', '৫টি'], ans: 1, exp: 'বাস্তুতন্ত্রের উপাদানগুলিকে প্রধানত দুটি ভাগে ভাগ করা হয়: অজৈব বা জড় উপাদান (তাপমাত্রা, জল, বায়ু) এবং জৈব বা সজীব উপাদান (উৎপাদক, খাদক, বিয়োজক)।'},
+      {q: 'বাস্তুতন্ত্রের যেসব জীব সৌরশক্তি, কার্বন ডাইঅক্সাইড ও জলের সাহায্যে নিজেদের খাদ্য নিজেরা তৈরি করে, তাদের কী বলে?', opts: ['পরভোজী', 'স্বভোজী বা উৎপাদক (Autotrophs)', 'বিয়োজক', 'স্ক্যাভেঞ্জার'], ans: 1, exp: 'সবুজ উদ্ভিদ, শৈবাল, ফাইটোপ্ল্যাঙ্কটন প্রভৃতি ক্লোরোফিলযুক্ত জীব সূর্যালোকের উপস্থিতিতে নিজেদের খাদ্য নিজেরা তৈরি করতে পারে বলে এদের স্বভোজী বা উৎপাদক বলে।'},
+      {q: 'সালোকসংশ্লেষকারী উদ্ভিদ সূর্যালোক থেকে শক্তি সংগ্রহ করে বলে এদের জীববিজ্ঞানের ভাষায় কী বলা হয়?', opts: ['কেমোট্রপ', 'ফটোট্রপ (Phototroph)', 'ডেট্রিভোর', 'ম্যাক্রোকনজিউমার'], ans: 1, exp: 'যে সমস্ত জীব সালোকসংশ্লেষ প্রক্রিয়ায় সরাসরি সূর্যালোক থেকে শক্তি সংগ্রহ করে খাদ্য তৈরি করে, তাদের ফটোট্রপ (Phototroph) বলে।'},
+      {q: 'যেসব ব্যাকটেরিয়া সূর্যালোক ছাড়াই পরিবেশ থেকে অজৈব উপাদান গ্রহণ করে রাসায়নিক বিক্রিয়ার মাধ্যমে খাদ্য তৈরি করে, তাদের কী বলে?', opts: ['ফটোট্রপ', 'কেমোট্রপ (Chemotroph) / অনালোকজীবী', 'পরজীবী', 'মৃতজীবী'], ans: 1, exp: 'সূর্যালোক ছাড়া অজৈব উপাদানকে রাসায়নিক বিক্রিয়ার শক্তিতে (Chemosynthesis) খাদ্যে রূপান্তরিত করা জীবদের কেমোট্রপ বা অনালোকজীবী বলে (যেমন- নাইট্রোসোমোনাস, থিয়োব্যাসিলাস)।'},
+      {q: 'বাস্তুতন্ত্রে ফড়িং, ইঁদুর, হরিণ, বাঘ ইত্যাদি প্রাণীরা যারা খাদ্যের জন্য উদ্ভিদের ওপর প্রত্যক্ষ বা পরোক্ষভাবে নির্ভরশীল, তাদের কী বলে?', opts: ['খাদক বা পরভোজী (Heterotrophs)', 'উৎপাদক', 'বিয়োজক', 'রূপান্তরক'], ans: 0, exp: 'যে সকল জীব নিজেদের দেহে খাদ্য তৈরি করতে পারে না এবং শক্তির জন্য উৎপাদকের ওপর নির্ভরশীল, তাদের খাদক বা পরভোজী বলে।'},
+      {q: 'যারা মৃত উদ্ভিদ ও জীবদেহকে বিয়োজিত করে পুষ্টি সংগ্রহ করে এবং জটিল যৌগকে সরল উপাদানে পরিণত করে প্রকৃতিতে ফিরিয়ে দেয়, তাদের কী বলে?', opts: ['প্রগৌণ খাদক', 'বিয়োজক বা মৃতজীবী (Decomposers)', 'উৎপাদক', 'প্রাথমিক খাদক'], ans: 1, exp: 'আণুবীক্ষণিক ব্যাকটেরিয়া ও ছত্রাক মৃত জীবদেহকে পচিয়ে সরল যৌগে (লবণ) পরিণত করে প্রকৃতিতে ফিরিয়ে দেয়। এদের বিয়োজক বা মৃতজীবী বলে।'},
+      {q: 'বাস্তুতন্ত্রে জটিল যৌগকে সরল যৌগে রূপান্তরিত করে বলে বিয়োজকদের অপর কী নামে ডাকা হয়?', opts: ['পরিবর্তক (Transformers)', 'স্ক্যাভেঞ্জার', 'সর্বভুক', 'অটোট্রফ'], ans: 0, exp: 'বিয়োজকরা মৃত জীবদেহের জটিল জৈব যৌগগুলিকে ভেঙে সরল উপাদানে রূপান্তরিত করে পুনরায় প্রকৃতিতে (মাটিতে) ফিরিয়ে দেয়, তাই এদের পরিবর্তক বা রূপান্তরক বলা হয়।'},
+      {q: 'আংশিক বিয়োজিত বা অসম্পূর্ণ পচনপ্রাপ্ত জৈব পদার্থকে কী বলা হয়?', opts: ['হিউমাস', 'ডেট্রিটাস (Detritus)', 'বায়োমাস', 'বেনথস'], ans: 1, exp: 'বিয়োজক দ্বারা সৃষ্ট মৃত জীবদেহের আংশিক বিয়োজিত বা পচনশীল জৈব পদার্থকে ডেট্রিটাস বলা হয়।'},
+      {q: 'আংশিক বিয়োজিত পদার্থ বা ডেট্রিটাস খেয়ে যেসব ছোটো প্রাণী বেঁচে থাকে (যেমন- কেঁচো, উইপোকা), তাদের কী বলে?', opts: ['ডেট্রিভোর (Detritivore)', 'অটোট্রফ', 'কার্নিভোর', 'অমনিভোর'], ans: 0, exp: 'কেঁচো, উইপোকা, কৃমি ইত্যাদি যারা আংশিক বিয়োজিত জৈব পদার্থ বা ডেট্রিটাস ভক্ষণ করে জীবনধারণ করে, তাদের ডেট্রিভোর বলে।'},
+      {q: 'বাস্তুতন্ত্রে কাক, শকুন, হায়না ইত্যাদি যারা পচা-গলা দেহ ও নোংরা খাবার খেয়ে পরিবেশ পরিষ্কার রাখে, তাদের কী বলা হয়?', opts: ['স্ক্যাভেঞ্জার (Scavenger) বা ঝাড়ুদার প্রাণী', 'প্রাথমিক খাদক', 'উৎপাদক', 'ফাইটোপ্ল্যাঙ্কটন'], ans: 0, exp: 'বাস্তুতন্ত্রে যেসব খাদক প্রাণী পচা-গলা দেহ ও নোংরা আবর্জনা খেয়ে বেঁচে থাকে এবং পরিবেশ পরিষ্কার রাখে, তাদের ঝাড়ুদার প্রাণী বা স্ক্যাভেঞ্জার বলে।'},
+      {q: 'জলে ভাসমান আণুবীক্ষণিক উদ্ভিদগোষ্ঠীকে কী বলা হয়?', opts: ['জুপ্ল্যাঙ্কটন', 'ফাইটোপ্ল্যাঙ্কটন (Phytoplankton)', 'বেনথস', 'নেকটন'], ans: 1, exp: 'জলে ভাসমান আণুবীক্ষণিক জীবদের প্ল্যাঙ্কটন বলে। এর মধ্যে উদ্ভিদগোষ্ঠীকে ফাইটোপ্ল্যাঙ্কটন (যা উৎপাদক হিসেবে কাজ করে) বলা হয়।'},
+      {q: 'জলে ভাসমান আণুবীক্ষণিক প্রাণীগোষ্ঠীকে (যেমন- ড্যাফনিয়া) কী বলা হয়?', opts: ['নেকটন', 'জুপ্ল্যাঙ্কটন (Zooplankton)', 'বেনথস', 'ফাইটোপ্ল্যাঙ্কটন'], ans: 1, exp: 'জলের উপরিভাগে ভাসমান অতি ক্ষুদ্র আণুবীক্ষণিক প্রাণীগোষ্ঠীকে জুপ্ল্যাঙ্কটন বলা হয়, এরা ফাইটোপ্ল্যাঙ্কটন খেয়ে বেঁচে থাকে (প্রাথমিক খাদক)।'},
+      {q: 'যেসব প্রাণী জলাশয়ের একেবারে তলদেশে বা মাটিতে বসবাস করে (যেমন- শামুক, ঝিনুক), তাদের কী বলা হয়?', opts: ['বেনথস (Benthos)', 'নেকটন', 'প্ল্যাঙ্কটন', 'স্ক্যাভেঞ্জার'], ans: 0, exp: 'যেসব জীব বা প্রাণী জলাশয়ের বা সমুদ্রের একেবারে নীচে বা তলদেশে হামাগুড়ি দিয়ে বা আটকে থেকে বসবাস করে, তাদের বেনথস বলে।'},
+      {q: 'বাজপাখি, ময়ূর, সাপ, বোয়াল মাছ ইত্যাদি যারা দ্বিতীয় সারির খাদকদের খাদ্য হিসেবে গ্রহণ করে, তারা কোন স্তরের খাদক?', opts: ['প্রাথমিক খাদক', 'উৎপাদক', 'প্রগৌণ বা তৃতীয় সারির খাদক (Tertiary Consumer)', 'সর্বভুক'], ans: 2, exp: 'যারা খাদ্যের জন্য গৌণ বা দ্বিতীয় সারির খাদকদের ওপর নির্ভরশীল, তাদের প্রগৌণ খাদক বা তৃতীয় সারির খাদক বলা হয়।'},
+      {q: 'প্রোটিন, ফ্যাট, কার্বোহাইড্রেট ইত্যাদি বাস্তুতন্ত্রের কোন ধরনের উপাদান?', opts: ['ভৌত উপাদান', 'সজীব উপাদান', 'জৈব উপাদান (Organic Component)', 'অজৈব উপাদান'], ans: 2, exp: 'বাস্তুতন্ত্রের জড় বা অজীবজাত উপাদানগুলির মধ্যে কার্বোহাইড্রেট, প্রোটিন, ফ্যাট ইত্যাদিকে জৈব উপাদান বলা হয় (যা মূলত মৃত জীবদেহ থেকে আসে)।'}
+    ]
+  },
+  3: {
+    name: 'Set 3',
+    icon: '🌿',
+    topic: 'বিভিন্ন প্রকার বাস্তুতন্ত্র ও বাস্তুবিদ্যা',
+    questions: [
+      {q: 'নদী বা প্রস্রবণের মতো প্রবহমান জলের বাস্তুতন্ত্রকে বিজ্ঞানের ভাষায় কী বলা হয়?', opts: ['লেনটিক (Lentic)', 'লোটিক (Lotic) বাস্তুতন্ত্র', 'পেডো-বায়োস্ফিয়ার', 'কৃত্রিম বাস্তুতন্ত্র'], ans: 1, exp: 'নদনদী, প্রস্রবণ ইত্যাদি যেখানে জল সর্বদা প্রবহমান বা গতিশীল থাকে, সেখানকার বাস্তুতন্ত্রকে \'লোটিক\' (Lotic) বাস্তুতন্ত্র বলা হয়।'},
+      {q: 'পুকুর, হ্রদ বা বিলের মতো স্থির জলের বাস্তুতন্ত্রকে কী বলা হয়?', opts: ['লোটিক', 'টেরিস্ট্রিয়াল', 'লেনটিক (Lentic) বাস্তুতন্ত্র', 'সাভানা'], ans: 2, exp: 'পুকুর, জলাশয়, হ্রদ ইত্যাদির আবদ্ধ বা স্থির জলের বাস্তুতন্ত্রকে \'লেনটিক\' (Lentic) বাস্তুতন্ত্র বলা হয়।'},
+      {q: 'বাস্তুবিদ্যার (Ecology) যে শাখায় একটি নির্দিষ্ট প্রজাতির সঙ্গে পরিবেশের সম্পর্ক নিয়ে আলোচনা করা হয়, তাকে কী বলে?', opts: ['সিনইকোলজি (Synecology)', 'অটইকোলজি (Autecology)', 'বায়োম ইকোলজি', 'ডির্মিইকোলজি'], ans: 1, exp: 'কোনো একটি নির্দিষ্ট পরিবেশে বসবাসকারী কেবল একটিমাত্র প্রজাতির (Species) জীবের সাথে তার পরিবেশের সম্পর্ক নিয়ে আলোচনাকে অটইকোলজি বলে।'},
+      {q: 'বাস্তুবিদ্যার যে শাখায় কোনো নির্দিষ্ট স্থানের একাধিক জীবসম্প্রদায়ের বা সমস্ত জীবগোষ্ঠীর সঙ্গে পরিবেশের সম্পর্ক আলোচিত হয়, তাকে কী বলে?', opts: ['অটইকোলজি', 'সিনইকোলজি (Synecology)', 'পপুলেশন ইকোলজি', 'পেডো-বায়োস্ফিয়ার'], ans: 1, exp: 'একটি নির্দিষ্ট স্থানে বসবাসকারী সমস্ত জীব সম্প্রদায় (Community) ও তাদের পরিবেশের মধ্যেকার পারস্পরিক সম্পর্কের আলোচনাকে সিনইকোলজি বলে।'},
+      {q: 'পাশাপাশি অবস্থিত দুটি প্রধান বাস্তুতন্ত্র বা জীবগোষ্ঠীর মধ্যবর্তী অধিক জীববৈচিত্র্যময় সংযোগস্থলকে কী বলে?', opts: ['বায়োম', 'ইকোটোন (Ecotone)', 'ইকোক্লাইন', 'নিসে'], ans: 1, exp: 'দুটি পাশাপাশি অবস্থিত বাস্তুতন্ত্রের (যেমন অরণ্য ও তৃণভূমি) মধ্যবর্তী যে মিলনস্থলে জীববৈচিত্র্য অত্যন্ত বেশি থাকে, তাকে ইকোটোন বলা হয়।'},
+      {q: 'যখন দুটি পাশাপাশি বাস্তুতন্ত্রে কোনো নির্দিষ্ট সীমারেখা থাকে না এবং একটি থেকে অন্যটিতে জীব সম্প্রদায়ের ধীর পরিবর্তন বা ঢাল (gradation) লক্ষ করা যায়, তাকে কী বলে?', opts: ['ইকোক্লাইন (Ecocline)', 'ইকোটোন', 'এজ এফেক্ট', 'ক্লাইম্যাক্স'], ans: 0, exp: 'দুটি বাস্তুতন্ত্রের মধ্যে সুস্পষ্ট সীমানার বদলে যখন পরিবেশগত কারণে উদ্ভিদ বা জীব সম্প্রদায়ের ধীরে ধীরে পরিবর্তন বা ঢাল দেখা যায়, তাকে ইকোক্লাইন বলে।'},
+      {q: 'দুটি বাস্তুতন্ত্রের মিলনস্থানে (Ecotone) অপেক্ষাকৃত অধিক সংখ্যক প্রজাতির অবস্থান এবং জীববৈচিত্র্যের এই বৃদ্ধিকে কী বলে?', opts: ['ক্লাইম্যাক্স কমিউনিটি', 'প্রান্ত প্রভাব বা এজ এফেক্ট (Edge Effect)', 'হোমিওস্টেসিস', 'বায়োমাস'], ans: 1, exp: 'দুটি বাস্তুতন্ত্রের সংযোগস্থলে দুই বাস্তুতন্ত্রের প্রজাতি ছাড়াও কিছু নিজস্ব প্রজাতির সমাবেশ ঘটে। প্রজাতি বৈচিত্র্যের এই বৃদ্ধিকে \'প্রান্ত প্রভাব\' বা \'Edge Effect\' বলে।'},
+      {q: 'বাস্তুতন্ত্রের জড় ও সজীব উপাদানের অবিরাম পরিবর্তন ঘটলেও যদি সময় সাপেক্ষে সমগ্র বাস্তুতন্ত্র অপরিবর্তিত বা সুস্থির থাকে, তখন তাকে কী বলে?', opts: ['ইকোক্লাইন', 'বাস্তুতন্ত্রের গতিশীল সাম্যাবস্থা (Dynamic Equilibrium)', 'জৈববিবর্ধন', 'থার্মোক্লাইন'], ans: 1, exp: 'বাস্তুতন্ত্রের উপাদানগুলি সর্বদা পরিবর্তিত হলেও নিজস্ব নিয়মে তা আবার ভারসাম্য ফিরে পায়। একেই বাস্তুতন্ত্রের গতিশীল সাম্যাবস্থা বলে।'},
+      {q: 'বাস্তুতন্ত্রে \'জনসংখ্যা বৃদ্ধি সহায়ক\' পদ্ধতিটিকে (growth inducing) বিজ্ঞানের ভাষায় কী বলা হয়?', opts: ['ঋণাত্মক প্রত্যাবর্ত পদ্ধতি', 'ধনাত্মক প্রত্যাবর্ত পদ্ধতি (Positive feedback mechanism)', 'এজ এফেক্ট', 'হোমিওস্টেসিস'], ans: 1, exp: 'বাস্তুতন্ত্রে যে পদ্ধতিটি জনসংখ্যা বৃদ্ধিতে সহায়তা করে, তাকে ধনাত্মক প্রত্যাবর্ত পদ্ধতি বলে। এর বিপরীতে থাকে ঋণাত্মক প্রত্যাবর্ত পদ্ধতি (যা জনসংখ্যা রোধ করে)।'},
+      {q: 'পরিবর্তিত পরিবেশে কোনো বাস্তুতন্ত্রের পুনরায় নিজের পূর্বাবস্থায় ফিরে আসার সামর্থ্যকে কী বলে?', opts: ['Power of Resilience বা পূর্বাবস্থায় ফেরার সামর্থ্য', 'Species Diversity', 'Edge Effect', 'Ecotone'], ans: 0, exp: 'কোনো কারণে বাস্তুতন্ত্রের ভারসাম্য সামান্য বিঘ্নিত হলে সেটি আবার স্বাভাবিক অবস্থায় ফিরে আসার চেষ্টা করে। এই ক্ষমতাকে \'Power of Resilience\' বলে।'},
+      {q: 'কোন বায়োমে প্রজাতির বৈচিত্র্য (Species Diversity) সর্বাধিক হওয়ায় তা অত্যন্ত সুস্থির (Stable) প্রকৃতির হয়?', opts: ['তুন্দ্রা বায়োম', 'মরুভূমির বায়োম', 'ক্রান্তীয় বৃষ্টির অরণ্য (Tropical Rain Forest)', 'সাভানা বায়োম'], ans: 2, exp: 'ক্রান্তীয় বৃষ্টির অরণ্যে প্রজাতি বৈচিত্র্য সর্বাধিক। তাই এই বাস্তুতন্ত্রে জটিল খাদ্যজালিকা থাকে এবং এটি চিরকাল অত্যন্ত সুস্থির বা Stable অবস্থায় থাকে।'},
+      {q: 'কৃষিক্ষেত্র, অ্যাকোয়ারিয়াম বা শহরের বাস্তুতন্ত্র কোন প্রকার বাস্তুতন্ত্রের প্রকৃষ্ট উদাহরণ?', opts: ['প্রাকৃতিক বাস্তুতন্ত্র', 'কৃত্রিম বাস্তুতন্ত্র (Artificial Ecosystem)', 'লোটিক বাস্তুতন্ত্র', 'মেরিন বাস্তুতন্ত্র'], ans: 1, exp: 'মানুষের দ্বারা পরিকল্পিত বা অপরিকল্পিতভাবে সৃষ্টি করা বাস্তুতন্ত্রকে কৃত্রিম বাস্তুতন্ত্র বলে। এর ভারসাম্য প্রায়শই বিঘ্নিত হয়।'},
+      {q: 'পৃথিবীর দশটি বৃহৎ তৃণভূমির মধ্যে প্রথম বা বৃহত্তম তৃণভূমি কোনটি?', opts: ['উত্তর আমেরিকার প্রেইরি', 'তিব্বতের নাকু (Naku) তৃণভূমি', 'আর্জেন্টিনার পম্পাস', 'অস্ট্রেলিয়ার ডাউন্স'], ans: 1, exp: 'পৃথিবীর দশটি বৃহৎ তৃণভূমির মধ্যে আয়তনের দিক দিয়ে তিব্বতের নাকু তৃণভূমি প্রথম স্থানে রয়েছে, এরপর রয়েছে উত্তর আমেরিকার গ্রেট প্লেনস।'},
+      {q: 'বাস্তুতন্ত্রের অজৈব উপাদানগুলি পরিবর্তিত হলে, জৈব উপাদানগুলি পরিবেশের সঙ্গে সমতা বজায় রাখার জন্য নিজেদের কর্মপদ্ধতির পরিবর্তন ঘটায়। একে কী বলে?', opts: ['হোমিওস্টেসিস (Homeostasis)', 'ইকোটোন', 'জীববিবর্ধন', 'ক্লাইম্যাক্স'], ans: 0, exp: 'পরিবেশের পরিবর্তনের সাথে সাথে বাস্তুতন্ত্রের ভেতরের জীবজ উপাদানগুলি নিজেদের মধ্যে যে স্বনিয়ন্ত্রিত সাম্যবস্থা বজায় রাখার চেষ্টা করে, তাকে হোমিওস্টেসিস বলে।'},
+      {q: 'কোনো বাস্তুতন্ত্রে প্রাণী ও উদ্ভিদ সম্প্রদায় যখন তাদের বৃদ্ধি ও বিকাশের সর্বোচ্চ সীমায় বা চূড়ান্ত পরিণতিতে পৌঁছায়, তখন তাকে কী বলে?', opts: ['বায়োমাস', 'নিসে', 'ক্লাইম্যাক্স কমিউনিটি (Climax Community)', 'ইকোক্লাইন'], ans: 2, exp: 'বাস্তুতন্ত্রের বিবর্তনের শেষ পর্যায়ে যে জীব সম্প্রদায় সবচেয়ে সুস্থির ও ভারসাম্যযুক্ত চূড়ান্ত অবস্থা লাভ করে, তাকে ক্লাইম্যাক্স কমিউনিটি বা চূড়ান্ত জীবগোষ্ঠী বলে।'}
+    ]
+  },
+  4: {
+    name: 'Set 4',
+    icon: '🔺',
+    topic: 'পুষ্টিস্তর ও বাস্তুতান্ত্রিক পিরামিড (Trophic Levels & Pyramids)',
+    questions: [
+      {q: 'বাস্তুতন্ত্রে উৎপাদক থেকে শুরু করে খাদক ও বিয়োজক পর্যন্ত খাদ্য-খাদক সম্পর্কের ভিত্তিতে খাদ্যের জোগান সংক্রান্ত ধাপ বা স্তরকে কী বলে?', opts: ['বায়োম', 'পুষ্টিস্তর বা ট্রফিক স্তর (Trophic Level)', 'ইকোটোন', 'নিসে'], ans: 1, exp: 'গ্রিক শব্দ \'Trophos\' অর্থাৎ পুষ্টিসাধন। বাস্তুতন্ত্রে উৎপাদক থেকে ধাপে ধাপে খাদকদের মধ্যে শক্তির প্রবাহের জন্য গঠিত খাদ্যের জোগান স্তরকে পুষ্টিস্তর বা ট্রফিক স্তর বলে।'},
+      {q: 'পুষ্টিস্তরের বিভিন্ন অংশের মধ্যে কোন স্তরে খাদ্যের জোগান ও পরিমাণ সবচেয়ে বেশি থাকে?', opts: ['দ্বিতীয় পুষ্টিস্তরে', 'প্রগৌণ খাদক স্তরে', 'প্রথম পুষ্টিস্তরে (উৎপাদক স্তরে)', 'বিয়োজক স্তরে'], ans: 2, exp: 'প্রথম পুষ্টিস্তরে অর্থাৎ উৎপাদকের (সবুজ উদ্ভিদ) সংখ্যা ও খাদ্যের জোগান সবচেয়ে বেশি থাকে এবং ওপরের স্তরে তা ক্রমশ কমতে থাকে।'},
+      {q: 'ঘাস, লতা, গুল্ম, বৃক্ষ, ফাইটোপ্ল্যাঙ্কটন ইত্যাদি বাস্তুতন্ত্রের কোন খাদ্যস্তরের অন্তর্গত?', opts: ['প্রথম খাদ্যস্তর (উৎপাদক)', 'দ্বিতীয় খাদ্যস্তর', 'তৃতীয় খাদ্যস্তর', 'চতুর্থ খাদ্যস্তর'], ans: 0, exp: 'সবুজ উদ্ভিদ ও শৈবাল যারা সূর্যালোকের উপস্থিতিতে খাদ্য তৈরি করে, তারা খাদ্যশৃঙ্খলের ভিত্তি অর্থাৎ প্রথম খাদ্যস্তর বা উৎপাদক গঠন করে।'},
+      {q: 'মানুষের মতো সর্বভুক প্রাণীরা সাধারণত খাদ্য পিরামিডের কোন স্তরে অবস্থান করে?', opts: ['প্রথম খাদ্যস্তরে', 'দ্বিতীয় খাদ্যস্তরে', 'তৃতীয় খাদ্যস্তরে', 'চতুর্থ বা সর্বোচ্চ খাদ্যস্তরে'], ans: 3, exp: 'মানুষ, ভালুক ইত্যাদি সর্বভুক প্রাণীরা যারা উদ্ভিদ ও প্রাণী উভয়কেই খাদ্য হিসেবে গ্রহণ করে, তারা সাধারণত চতুর্থ খাদ্যস্তর বা সর্বোচ্চ স্তরে অবস্থান করে।'},
+      {q: 'কোনো প্রাণীর পুষ্টিলাভের নির্দিষ্ট এলাকা বা পরিবেশের কার্যকরী অবস্থানকে ওই প্রাণীর কী বলা হয়?', opts: ['ইকোটোন', 'ইকোলজিক্যাল নিসে (Ecological Niche)', 'বায়োম', 'হ্যাবিট্যাট'], ans: 1, exp: 'একটি নির্দিষ্ট ট্রফিক স্তরে অবস্থানকারী কোনো প্রাণী পরিবেশের যে নির্দিষ্ট অংশ থেকে তার খাদ্য ও পুষ্টি সংগ্রহ করে, তাকে তার ইকোলজিক্যাল নিসে বা কর্মগত অবস্থান বলে।'},
+      {q: 'ইকোলজিক্যাল নিসের বৈশিষ্ট্য অনুযায়ী, ওপরের ট্রফিক স্তরে প্রাণীদের নিসে কেমন হয়?', opts: ['খুব ছোটো হয়', 'বড়ো হয়', 'শূন্য হয়ে যায়', 'মাঝারি হয়'], ans: 1, exp: 'নীচের স্তরের প্রাণীদের (যেমন মৌমাছি) নিসে ছোটো হলেও, ওপরের স্তরের প্রাণীদের (যেমন বাঘ বা সিংহ যারা বহু প্রাণী শিকার করে) ইকোলজিক্যাল নিসে অনেক বড়ো হয়।'},
+      {q: 'প্রতিটি পুষ্টিস্তরকে জীবের সংখ্যা অনুযায়ী পরপর সাজালে যে পিরামিড গঠিত হয়, তাকে কী বলে?', opts: ['জীবভর পিরামিড', 'শক্তি পিরামিড', 'সংখ্যা পিরামিড (Pyramid of Numbers)', 'উলটানো পিরামিড'], ans: 2, exp: 'উৎপাদক থেকে সর্বোচ্চ খাদক পর্যন্ত প্রতিটি স্তরের জীবের সংখ্যা অনুযায়ী যে কাল্পনিক পিরামিড তৈরি করা হয়, তাকে সংখ্যা পিরামিড বলে।'},
+      {q: 'একটি নির্দিষ্ট অঞ্চলে জীবের শুষ্ক ওজনের (Dry weight) পরিমাণকে পুষ্টিস্তর অনুসারে সাজালে কোন পিরামিড গঠিত হয়?', opts: ['সংখ্যা পিরামিড', 'জীবভর পিরামিড (Biomass Pyramid)', 'শক্তি পিরামিড', 'উলটানো পিরামিড'], ans: 1, exp: 'জীবের শুষ্ক ওজনের পরিমাণ বা বায়োমাসকে পুষ্টিস্তর অনুসারে সাজালে জীবভর পিরামিড গঠিত হয়। এর মাধ্যমে জীবগোষ্ঠীর আয়তন জানা যায়।'},
+      {q: 'প্রতিটি স্তরে জীবগোষ্ঠী দ্বারা ব্যবহৃত মোট শক্তির পরিমাণকে পরপর সাজালে কোন পিরামিড পাওয়া যায়?', opts: ['শক্তি পিরামিড (Energy Pyramid)', 'জীবভর পিরামিড', 'সংখ্যা পিরামিড', 'বিপরীত পিরামিড'], ans: 0, exp: 'ট্রফিক স্তরে শক্তি প্রবাহের হার ও পরিমাণকে সাজিয়ে শক্তি পিরামিড তৈরি হয়, যা সর্বদা সোজা বা ঊর্ধ্বমুখী হয় এবং বাস্তুতন্ত্রের উৎপাদন ক্ষমতা নির্দেশ করে।'},
+      {q: 'পরজীবী বাস্তুতন্ত্রে (যেমন: গাছ -> কৃমি -> আদ্যপ্রাণী) জীবসংখ্যা পিরামিড কী আকৃতির হয়?', opts: ['সোজা বা ঊর্ধ্বমুখী', 'বিপরীত বা উলটানো পিরামিড (Inverted Pyramid)', 'ঘণ্টাকৃতি', 'সমান্তরাল'], ans: 1, exp: 'পরজীবী বাস্তুতন্ত্রে একটি বড়ো গাছকে আশ্রয় করে অসংখ্য কৃমি এবং তাদের ওপর আরও বেশি আদ্যপ্রাণী নির্ভর করে। ফলে উপরের স্তরে সংখ্যা বাড়তে থাকায় পিরামিডটি উলটানো বা বিপরীত আকৃতির হয়।'},
+      {q: 'ট্রফিক স্তরের সর্বাপেক্ষা ওপরে অবস্থান করে কারা?', opts: ['উৎপাদক', 'প্রাথমিক খাদক', 'গৌণ খাদক', 'সর্বোচ্চ সারির খাদক (Top Consumers)'], ans: 3, exp: 'খাদ্য পিরামিডের সবচেয়ে নীচে থাকে উৎপাদক এবং একদম ওপরের স্তরে থাকে সর্বোচ্চ সারির খাদক বা প্রগৌণ খাদক, যাদের সংখ্যা সবচেয়ে কম হয়।'},
+      {q: 'খাদ্যশৃঙ্খলে উৎপাদকের খাদ্যস্তরটি কী নামে পরিচিত?', opts: ['শীর্ষস্তর', 'ভিত্তিস্তর', 'মধ্যস্তর', 'বিয়োজক স্তর'], ans: 1, exp: 'খাদ্যশৃঙ্খলে উৎপাদক হলো সমস্ত শক্তির প্রাথমিক আধার, তাই উৎপাদকের খাদ্যস্তরকে \'ভিত্তিস্তর\' বলা হয়।'},
+      {q: 'খাদ্যশৃঙ্খলে উৎপাদক স্তর থেকে সর্বোচ্চ খাদক স্তরে গেলে উপাদানের পরিমাণ বা জীবের সংখ্যা সাধারণত কী হয়?', opts: ['বাড়তে থাকে', 'ক্রমশ কমতে থাকে', 'একই থাকে', 'প্রথমে কমে পরে বাড়ে'], ans: 1, exp: 'খাদ্য পিরামিডের নিয়ম অনুযায়ী, নীচের স্তর থেকে ওপরের দিকে উঠলে শক্তির যেমন হ্রাস ঘটে, তেমনই জীবের সংখ্যা বা পরিমাণও ক্রমশ কমতে থাকে।'},
+      {q: 'কোন স্তরের জীবেরা সৌরশক্তি, জল ও কার্বন ডাইঅক্সাইডের সাহায্যে সালোকসংশ্লেষ প্রক্রিয়ায় খাদ্য তৈরি করে?', opts: ['প্রথম খাদ্যস্তর বা উৎপাদক', 'দ্বিতীয় খাদ্যস্তর', 'তৃতীয় খাদ্যস্তর', 'বিয়োজক'], ans: 0, exp: 'সবুজ উদ্ভিদ প্রথম খাদ্যস্তর গঠন করে, যারা পরিবেশের অজৈব উপাদান ও সৌরশক্তির সাহায্যে নিজেদের খাদ্য নিজেরা তৈরি করে।'},
+      {q: 'কোনো কোনো পিরামিডের ঊর্ধ্বস্তরগুলিতে জীবসংখ্যা বা জীবভরের পরিমাণ যখন বাড়তে থাকে, তখন সেই পিরামিডকে কী বলে?', opts: ['শক্তি পিরামিড', 'বিপরীত পিরামিড (Inverted Pyramid)', 'সোজা পিরামিড', 'অসম্পূর্ণ পিরামিড'], ans: 1, exp: 'যখন নীচের স্তরের তুলনায় ওপরের স্তরে জীবের সংখ্যা বা জীবভর বেশি হয় (যেমন পরজীবী বা কিছু জলজ বাস্তুতন্ত্রে), তখন তাকে বিপরীত বা উলটানো পিরামিড বলে।'}
+    ]
+  },
+  5: {
+    name: 'Set 5',
+    icon: '⚡',
+    topic: 'শক্তিপ্রবাহ ও লিন্ডেম্যানের সূত্র (Energy Flow & 10% Law)',
+    questions: [
+      {q: 'সবুজ উদ্ভিদ সালোকসংশ্লেষ প্রক্রিয়ায় মোট যে পরিমাণ সৌরশক্তি শর্করাতে আবদ্ধ করে, তাকে কী বলে?', opts: ['নিট প্রাথমিক উৎপাদন (NPP)', 'মোট প্রাথমিক উৎপাদন (Gross Primary Production বা GPP)', 'শ্বসন শক্তি', 'গৌণ উৎপাদন'], ans: 1, exp: 'সালোকসংশ্লেষ প্রক্রিয়ার মাধ্যমে সবুজ উদ্ভিদ মোট যে পরিমাণ সৌরশক্তি শর্করাতে আবদ্ধ করে নিজের দেহে উৎপাদন করে, তাকে মোট প্রাথমিক উৎপাদন বা GPP বলে।'},
+      {q: 'মোট প্রাথমিক উৎপাদন (GPP) থেকে উদ্ভিদের শ্বসন (R) ও অন্যান্য শারীরবৃত্তীয় কাজে ব্যয়িত শক্তি বাদ দিলে যা দেহে সঞ্চিত থাকে, তাকে কী বলে?', opts: ['মোট প্রাথমিক উৎপাদন', 'শ্বসন শক্তি', 'নিট প্রাথমিক উৎপাদন (Net Primary Production বা NPP)', 'জীববিবর্ধন'], ans: 2, exp: 'মোট উৎপাদিত শক্তি থেকে উদ্ভিদের নিজস্ব শারীরবৃত্তীয় কাজে (R) ব্যয় হওয়া শক্তি বাদ দিলে যা সঞ্চিত থাকে (GPP - R), তাকে নিট প্রাথমিক উৎপাদন (NPP) বলে।'},
+      {q: 'বিজ্ঞানীদের মতে, মোট প্রাথমিক উৎপাদনের (GPP) প্রায় কত শতাংশ হলো নিট প্রাথমিক উৎপাদন (NPP)?', opts: ['১০-২০ শতাংশ', '৫০-৮০ শতাংশ', '৯০-১০০ শতাংশ', '৫-১০ শতাংশ'], ans: 1, exp: 'বিজ্ঞানীদের মতে, মোট প্রাথমিক উৎপাদনের (GPP) প্রায় ৫০ থেকে ৮০ শতাংশ হলো নিট প্রাথমিক উৎপাদন (NPP), যা খাদকদের জন্য উপলব্ধ থাকে।'},
+      {q: 'খাদ্যশৃঙ্খলে উৎপাদক স্তর থেকে খাদক স্তরে শক্তি কী রূপে স্থানান্তরিত হয়?', opts: ['গতিশক্তি হিসেবে', 'প্রকৃত শক্তি (Net Energy) বা স্থিতিশক্তি হিসেবে', 'তাপশক্তি হিসেবে', 'রাসায়নিক গ্যাস হিসেবে'], ans: 1, exp: 'উৎপাদকের দেহে সঞ্চিত নিট প্রাথমিক উৎপাদনই প্রকৃত শক্তি (Net Energy) বা স্থিতিশক্তিরূপে খাদ্যশৃঙ্খলের মাধ্যমে পরবর্তী খাদক স্তরে স্থানান্তরিত হয়।'},
+      {q: '১৯৪২ সালে বাস্তুতন্ত্রে শক্তিপ্রবাহের \'দশ শতাংশের সূত্র\' (10% Law) কে প্রবর্তন করেন?', opts: ['জি. লিন্ডেম্যান (R. Lindeman)', 'এ. জি. ট্যান্সলে', 'ই. পি. ওডাম', 'আর্নেস্ট হেকেল'], ans: 0, exp: '১৯৪২ সালে বিজ্ঞানী রেমন্ড লিন্ডেম্যান (Raymond Lindeman) ক্রমোচ্চ পুষ্টিস্তরে শক্তিপ্রবাহের ধরন বোঝাতে বিখ্যাত \'দশ শতাংশের সূত্র\' বা 10% Law প্রবর্তন করেন।'},
+      {q: 'লিন্ডেম্যানের দশ শতাংশের সূত্র অনুযায়ী, খাদ্যশৃঙ্খলের প্রতিটি পুষ্টিস্তরে কত শতাংশ শক্তি পরবর্তী পুষ্টিস্তরে স্থানান্তরিত হয়?', opts: ['৯০ শতাংশ', '৫০ শতাংশ', '১০ শতাংশ', '১ শতাংশ'], ans: 2, exp: 'এই সূত্র অনুযায়ী, কোনো খাদ্যশৃঙ্খলে প্রতিটি পুষ্টিস্তরে অর্জিত শক্তির ৯০ শতাংশ নিজস্ব শারীরবৃত্তীয় কাজে খরচ হয় এবং মাত্র ১০ শতাংশ শক্তি পরবর্তী পুষ্টিস্তরে স্থানান্তরিত হয়।'},
+      {q: 'বাস্তুতন্ত্রে শক্তির প্রবাহ সর্বদা কোনমুখী হয়?', opts: ['বহুমুখী', 'দ্বিমুখী', 'একমুখী (Unidirectional)', 'চক্রাকার'], ans: 2, exp: 'বাস্তুতন্ত্রে শক্তি উৎপাদক থেকে বিভিন্ন খাদক স্তরে স্থানান্তরিত হয়ে অবশেষে পরিবেশে মিলিয়ে যায়। এই শক্তি কখনোই প্রাথমিক অবস্থায় (সূর্যে) ফিরে আসে না, তাই শক্তিপ্রবাহ সর্বদা একমুখী হয়।'},
+      {q: 'বাস্তুতন্ত্রে শক্তিপ্রবাহ তাপগতিবিদ্যার (Thermodynamics) কোন কোন সূত্রকে অনুসরণ করে?', opts: ['কেবল প্রথম সূত্র', 'প্রথম ও দ্বিতীয় সূত্র', 'কেবল তৃতীয় সূত্র', 'প্রথম ও তৃতীয় সূত্র'], ans: 1, exp: 'বাস্তুতন্ত্রে শক্তির রূপান্তর ও প্রবাহ তাপগতিবিদ্যার প্রথম সূত্র (শক্তির রূপান্তর) এবং দ্বিতীয় সূত্র (রূপান্তরের সময় শক্তির অপচয় বা হ্রাস) উভয়কেই কঠোরভাবে অনুসরণ করে।'},
+      {q: '"শক্তির রূপান্তর ঘটে, কিন্তু শক্তিকে সৃষ্টি বা ধ্বংস করা যায় না"— এটি তাপগতিবিদ্যার কোন সূত্র?', opts: ['প্রথম সূত্র', 'দ্বিতীয় সূত্র', 'তৃতীয় সূত্র', 'শূন্যতম সূত্র'], ans: 0, exp: 'তাপগতিবিদ্যার প্রথম সূত্র অনুযায়ী শক্তি অবিনশ্বর, এর কেবল এক রূপ থেকে অন্য রূপে (যেমন সৌরশক্তি থেকে রাসায়নিক খাদ্যে) রূপান্তর ঘটে।'},
+      {q: 'তাপগতিবিদ্যার দ্বিতীয় সূত্র অনুসারে শক্তির রূপান্তরের সময় কী ঘটে?', opts: ['শক্তির পরিমাণ বেড়ে যায়', 'শক্তির অপচয় ঘটে বা তাপ হিসেবে শক্তি নষ্ট হয়', 'শক্তি ১০০% রূপান্তরিত হয়', 'শক্তি চক্রাকারে ঘোরে'], ans: 1, exp: 'দ্বিতীয় সূত্র অনুসারে, কোনো শক্তিরই ১০০ ভাগ রূপান্তর সম্ভব নয়। এক পুষ্টিস্তর থেকে অন্য স্তরে যাওয়ার সময় কিছু শক্তি তাপ, শ্বসন ও রেচন হিসেবে অপচয় হয়ে যায়।'},
+      {q: 'প্রতিবছর পৃথিবীতে আগত বিপুল সৌরশক্তির (প্রায় 12.3 x 10²² কিলোক্যালোরি) মাত্র কত শতাংশ সবুজ উদ্ভিদের দেহের শর্করায় আবদ্ধ বা সঞ্চিত থাকে?', opts: ['১০ শতাংশ', '৫০ শতাংশ', 'মাত্র ০.১ শতাংশ', '৫ শতাংশ'], ans: 2, exp: 'পৃথিবীতে আগত মোট সৌরশক্তির অতি সামান্য অংশ, অর্থাৎ মাত্র ০.১% স্থিতিশক্তিরূপে সবুজ উদ্ভিদের দেহের শর্করাতে আবদ্ধ থাকে, যা সমগ্র জীবজগতের শক্তির আধার।'},
+      {q: 'জীব যে পরিমাণ শক্তি গ্রহণ করে, তার অনেকটাই বিপাক, উষ্ণতা নিয়ন্ত্রণ, খাদ্য পরিপাক প্রভৃতি কাজে ব্যয় হয়। একে কী শক্তি বলে?', opts: ['স্থিতিশক্তি', 'শ্বসন শক্তি (Respiratory Energy)', 'নিট শক্তি', 'তাপশক্তি'], ans: 1, exp: 'জীবের নিজস্ব শারীরবৃত্তীয় কাজের জন্য যে বিপুল পরিমাণ শক্তি (প্রায় ৯০%) ব্যয় বা অপচয় হয়, তাকে শ্বসন শক্তি (Respiratory Energy বা R) বলা হয়।'},
+      {q: 'খাদ্যশৃঙ্খলের মাধ্যমে বিভিন্ন ক্ষতিকারক রাসায়নিক উপাদান জীবদেহে পুঞ্জীভূত হয় এবং পরবর্তী খাদ্যস্তরে এর মাত্রা ক্রমশ বাড়তে থাকে। একে কী বলে?', opts: ['জীববিবর্ধন (Biomagnification)', 'হোমিওস্টেসিস', 'ইকোটোন', 'বিয়োজন'], ans: 0, exp: 'পরিবেশে থাকা বিষাক্ত রাসায়নিক (যেমন- ডিডিটি) খাদ্যশৃঙ্খলে প্রবেশ করলে তা ধাপে ধাপে খাদকদের দেহে সঞ্চিত হয়ে ঘনত্ব বাড়াতে থাকে। এই ক্রমিক বৃদ্ধিকে জীববিবর্ধন বা Biomagnification বলে।'},
+      {q: 'বাস্তুতন্ত্রে শক্তিপ্রবাহ একমুখী হওয়ার প্রধান কারণ কী?', opts: ['শক্তি মাটি থেকে আসে বলে', 'অর্জিত শক্তি কখনোই প্রাথমিক অবস্থায় বা সূর্যে ফিরে যায় না বলে', 'শক্তি বারবার সৃষ্টি হয় বলে', 'এটি চক্রাকারে ঘোরে বলে'], ans: 1, exp: 'বাস্তুতন্ত্রের শেষ স্তর থেকে শক্তি তাপ হিসেবে পরিবেশে বিলীন হয়ে যায়, তা কখনোই উলটোপথে ফিরে গিয়ে আবার সৌরশক্তিতে পরিণত হতে পারে না।'},
+      {q: 'বিয়োজকরা মৃতদেহ পচানোর সময় বায়ুতে কোন গ্যাস সরবরাহ করে গ্রিনহাউস প্রভাব বাড়িয়ে তোলে?', opts: ['অক্সিজেন', 'নাইট্রোজেন', 'মিথেন', 'আর্গন'], ans: 2, exp: 'বিয়োজক বা ব্যাকটেরিয়া জৈব পদার্থ পচানোর সময় পরিবেশে মিথেন, কার্বন ডাইঅক্সাইড প্রভৃতি গ্যাস নির্গত করে যা গ্রিনহাউস প্রভাব বৃদ্ধিতে সাহায্য করে।'}
+    ]
+  },
+  6: {
+    name: 'Set 6',
+    icon: '🕸️',
+    topic: 'খাদ্যশৃঙ্খল ও খাদ্যজালিকা (Food Chain & Food Web)',
+    questions: [
+      {q: 'যে শৃঙ্খলে জীবেরা একে অন্যের সাথে খাদ্য-খাদক হিসেবে সম্পর্কযুক্ত থাকে এবং উৎপাদক থেকে ক্রমপর্যায়ে শক্তির ধারাবাহিক প্রবাহ ঘটে, তাকে কী বলে?', opts: ['খাদ্যজাল (Food Web)', 'পুষ্টিচক্র', 'খাদ্যশৃঙ্খল (Food Chain)', 'ইকোটোন'], ans: 2, exp: 'উৎপাদক থেকে শুরু করে সর্বোচ্চ খাদক পর্যন্ত খাদ্য-খাদক সম্পর্কের ভিত্তিতে শক্তির যে রৈখিক ও পর্যায়ক্রমিক প্রবাহ দেখা যায়, তাকে খাদ্যশৃঙ্খল বলে।'},
+      {q: 'খাদ্য ও খাদকের প্রকৃতি বা চারিত্রিক বৈশিষ্ট্য অনুসারে খাদ্যশৃঙ্খলকে প্রধানত কয়টি ভাগে ভাগ করা যায়?', opts: ['২টি', '৩টি (শিকারি, পরজীবী, মৃতজীবী)', '৪টি', '৫টি'], ans: 1, exp: 'খাদ্য ও খাদকের প্রকৃতি অনুসারে খাদ্যশৃঙ্খলকে প্রধানত তিনটি ভাগে ভাগ করা যায়—শিকারি খাদ্যশৃঙ্খল, পরজীবী খাদ্যশৃঙ্খল এবং মৃতজীবী খাদ্যশৃঙ্খল।'},
+      {q: 'তৃণভোজী প্রাণী থেকে শুরু হয়ে পর্যায়ক্রমে ক্ষুদ্র থেকে বৃহত্তর মাংসাশী প্রাণীতে শেষ হওয়া খাদ্যশৃঙ্খলকে কী বলে?', opts: ['শিকারি খাদ্যশৃঙ্খল (Predator food chain)', 'পরজীবী খাদ্যশৃঙ্খল', 'বিয়োজক খাদ্যশৃঙ্খল', 'মৃতজীবী খাদ্যশৃঙ্খল'], ans: 0, exp: 'যে খাদ্যশৃঙ্খলে পুষ্টিস্তরের প্রাণীগুলো ক্রমশ ক্ষুদ্র থেকে বৃহত্তর হতে থাকে (যেমন: ফড়িং -> ব্যাং -> সাপ -> ময়ূর/বাজপাখি), তাকে শিকারি খাদ্যশৃঙ্খল বলে।'},
+      {q: '\'কুকুর -> কৃমি -> আদ্যপ্রাণী বা বিয়োজক\' - এটি কোন ধরনের খাদ্যশৃঙ্খলের উদাহরণ?', opts: ['শিকারি খাদ্যশৃঙ্খল', 'ডেট্রিটাস খাদ্যশৃঙ্খল', 'পরজীবী খাদ্যশৃঙ্খল (Parasitic food chain)', 'গ্রেজিং খাদ্যশৃঙ্খল'], ans: 2, exp: 'বৃহত্তর জীবকে আশ্রয় করে ক্ষুদ্র থেকে ক্ষুদ্রতর জীবের মধ্যে শক্তি প্রবাহিত হলে তাকে পরজীবী খাদ্যশৃঙ্খল বলে।'},
+      {q: 'খাদ্যাভ্যাস অনুসারে, উৎপাদক থেকে শুরু হয়ে মাংসাশী প্রাণীতে শক্তিপ্রবাহ শেষ হলে তাকে কোন খাদ্যশৃঙ্খল বলে?', opts: ['গ্রেজিং বা চারণভূমি খাদ্যশৃঙ্খল (Grazing food chain)', 'ডেট্রিটাস খাদ্যশৃঙ্খল', 'পরজীবী খাদ্যশৃঙ্খল', 'মৃতজীবী খাদ্যশৃঙ্খল'], ans: 0, exp: 'খাদ্যাভ্যাস অনুযায়ী যে খাদ্যশৃঙ্খল উৎপাদক থেকে শুরু হয়ে মাংসাশী প্রাণীতে শেষ হয়, তাকে গ্রেজিং বা চারণভূমি খাদ্যশৃঙ্খল বলে।'},
+      {q: '\'পচা পাতা -> লার্ভা -> ছোটো মাছ -> বড়ো মাছ\' - এটি কোন খাদ্যশৃঙ্খলের উদাহরণ?', opts: ['গ্রেজিং খাদ্যশৃঙ্খল', 'শিকারি খাদ্যশৃঙ্খল', 'ডেট্রিটাস বা বিয়োজক খাদ্যশৃঙ্খল (Detritus food chain)', 'পরজীবী খাদ্যশৃঙ্খল'], ans: 2, exp: 'যে খাদ্যশৃঙ্খলে শক্তির প্রবাহ অনুখাদক বা বিয়োজক স্তর থেকে শুরু হয়ে ক্রমশ বড়ো প্রাণীতে শেষ হয়, তাকে ডেট্রিটাস খাদ্যশৃঙ্খল বলে।'},
+      {q: 'কোনো বাস্তুতন্ত্রে একাধিক আন্তঃসম্পর্কযুক্ত খাদ্যশৃঙ্খলের সমন্বয়ে গঠিত জালিকাকার বিন্যাসকে কী বলে?', opts: ['খাদ্যশৃঙ্খল', 'খাদ্যজাল বা খাদ্যজালিকা (Food Web)', 'শক্তি পিরামিড', 'পুষ্টিচক্র'], ans: 1, exp: 'একাধিক আন্তঃসম্পর্কযুক্ত জটিল খাদ্যশৃঙ্খলের মাধ্যমে শক্তি পরিবাহিত হয়ে যে জালিকাকার বিন্যাস তৈরি করে, তাকে খাদ্যজাল বা খাদ্যজালিকা বলে।'},
+      {q: 'খাদ্যজালের বৈশিষ্ট্য অনুযায়ী, একটি খাদ্যশৃঙ্খলে বিপর্যয় দেখা দিলে বাস্তুতন্ত্রের কী হয়?', opts: ['সম্পূর্ণ বাস্তুতন্ত্র ধ্বংস হয়ে যায়', 'বিকল্প পথে শক্তি সরবরাহ অক্ষুণ্ণ থাকায় ভারসাম্য রক্ষিত হয়', 'শুধুমাত্র বিয়োজক মারা যায়', 'উৎপাদক ধ্বংস হয়ে যায়'], ans: 1, exp: 'খাদ্যজালে একাধিক বিকল্প খাদ্যের উৎস থাকায় একটি খাদ্যশৃঙ্খলে বিপর্যয় দেখা দিলেও বিকল্প পথে খাদ্য ও শক্তির সরবরাহ অক্ষুণ্ন থাকে, ফলে বাস্তুতান্ত্রিক ভারসাম্য রক্ষায় কোনো সমস্যা সৃষ্টি হয় না।'},
+      {q: 'বাস্তুতন্ত্রে বিভিন্ন জৈব ও অজৈব পুষ্টি পদার্থের চক্রাকার আবর্তন বা \'জীব-ভূরাসায়নিক চক্র\' বজায় রাখতে কে সাহায্য করে?', opts: ['খাদ্যশৃঙ্খল', 'সূর্যালোক', 'জলবায়ু', 'মৃত্তিকা'], ans: 0, exp: 'খাদ্যশৃঙ্খল ও খাদ্যজাল খাদ্য ও খাদকের মধ্যে সুসম্পর্ক গড়ে তোলে, যার ফলে বিভিন্ন জৈব ও অজৈব পুষ্টি পদার্থের চক্রাকার আবর্তন সর্বদা চলতে থাকে।'},
+      {q: 'খাদ্যশৃঙ্খল সম্পূর্ণরূপে বিনষ্ট হলে বাস্তুতন্ত্রের ওপর কী প্রভাব পড়বে?', opts: ['বাস্তুতন্ত্রের উৎপাদন ক্ষমতা বহুগুণ বৃদ্ধি পাবে', 'প্রতিটি পুষ্টিস্তরের জীবগোষ্ঠীর অস্তিত্বের সংকট দেখা দেবে এবং বাস্তুতন্ত্র বিপন্ন হবে', 'শুধুমাত্র উৎপাদক স্তর লাভবান হবে', 'কোনো প্রভাবই পড়বে না'], ans: 1, exp: 'খাদ্যশৃঙ্খল বিনষ্ট হলে প্রতিটি পুষ্টিস্তরের জীবগোষ্ঠীর জীবনে অস্তিত্বের সংকট দেখা দেবে এবং সেই সঙ্গে সমগ্র বাস্তুতন্ত্রের অস্তিত্বও চিরতরে নষ্ট হয়ে যাওয়ার সম্ভাবনা তৈরি হবে।'},
+      {q: 'খাদ্যজালের জটিলতা জীববৈচিত্র্যের ওপর কী প্রভাব ফেলে?', opts: ['জীববৈচিত্র্য কমিয়ে দেয়', 'জীববৈচিত্র্য ও প্রজাতিবৈচিত্র্য বেশি হয়', 'জীববৈচিত্র্য সম্পূর্ণ ধ্বংস করে', 'প্রজাতিবৈচিত্র্যের ওপর কোনো প্রভাব ফেলে না'], ans: 1, exp: 'খাদ্যজালের বিভিন্ন খাদ্যস্তরে একাধিক খাদ্য ও খাদক থাকায় সেই বাস্তুতন্ত্রে জীববৈচিত্র্য ও প্রজাতিবৈচিত্র্য অনেক বেশি হয়।'},
+      {q: 'সাধারণত একটি বাস্তুতন্ত্রের খাদ্যশৃঙ্খলে পুষ্টিস্তরের সংখ্যা কত হয়ে থাকে?', opts: ['১ থেকে ২ টি', '৩ থেকে ৫ টি', '৭ থেকে ১০ টি', '১০ টির বেশি'], ans: 1, exp: 'প্রকৃতিতে খাদ্যশৃঙ্খলের মাধ্যমে শক্তি প্রবাহের ক্ষেত্রে পুষ্টিস্তরের সংখ্যা সাধারণত ৩ থেকে ৫-এর মধ্যে সীমাবদ্ধ থাকে।'},
+      {q: 'খাদ্যশৃঙ্খলে শক্তির প্রবাহের অভিমুখ কেমন হয়?', opts: ['সর্বদা দ্বিমুখী', 'চক্রাকার বা বহুমুখী', 'সর্বদা একমুখী (Unidirectional)', 'নিম্নমুখী'], ans: 2, exp: 'বাস্তুতন্ত্রে খাদ্যশক্তি সর্বনিম্ন পুষ্টিস্তর (উৎপাদক) থেকে সর্বোচ্চ পুষ্টিস্তর পর্যন্ত পরিবাহিত হয় এবং পরিবেশে বিলীন হয়ে যায়। তাই শক্তির প্রবাহ সর্বদা একমুখী হয়।'},
+      {q: 'খাদ্যজালের মাধ্যমে বাস্তুতন্ত্রের কোন্ স্তরের প্রাণীদের সঠিকভাবে চিহ্নিত করা সহজ হয়?', opts: ['ফাইটোপ্ল্যাঙ্কটনদের', 'বিয়োজকদের', 'সর্বভুক বা সর্বশেষ স্তরের খাদকদের', 'কেমোট্রপদের'], ans: 2, exp: 'খাদ্যজালের একটি অন্যতম বৈশিষ্ট্য হলো এর মাধ্যমে সর্বভুক বা সর্বশেষ স্তরের খাদককে সঠিকভাবে চিহ্নিত করা যায়।'},
+      {q: 'তৃতীয় পুষ্টিস্তরের প্রচুর মাংসাশী প্রাণী শিকার করা হলে বাস্তুতন্ত্রের কী অবস্থা হবে?', opts: ['উৎপাদকের সংখ্যা বহুগুণ বেড়ে যাবে', 'তৃণভোজী প্রাণীর সংখ্যা বেড়ে যাবে এবং তারা উৎপাদক শ্রেণিকে খেয়ে শেষ করে দেবে', 'বাস্তুতন্ত্র আরও সুস্থির হবে', 'কোনো পরিবর্তন হবে না'], ans: 1, exp: 'তৃতীয় পুষ্টিস্তরে প্রচুর মাংসাশী প্রাণী শিকার করলে তৃণভোজী প্রাণীর সংখ্যা অস্বাভাবিক বেড়ে যাবে। তখন এরা উৎপাদক শ্রেণিকে খেয়ে শেষ করে দেবে, ফলে সমগ্র বাস্তুতন্ত্র নষ্ট হয়ে যাবে।'}
+    ]
+  },
+  7: {
+    name: 'Set 7',
+    icon: '🌐',
+    topic: 'জীবমণ্ডল - বিবিধ ও বাস্তুতন্ত্রের বৈচিত্র্য',
+    questions: [
+      {q: 'পরিবেশের যে অংশে চরম প্রতিকূল অবস্থার জন্য কোনো জীব বসবাস করতে পারে না, তাকে কী বলে?', opts: ['এনবায়োস্ফিয়ার', 'প্যারাবায়োস্ফিয়ার (Parabiosphere)', 'ইকোটোন', 'মেসোস্ফিয়ার'], ans: 1, exp: 'হিমরেখার ঊর্ধ্বে বরফাবৃত পার্বত্য অঞ্চল, জীবন্ত আগ্নেয়গিরি, গভীর সমুদ্র—যেখানে প্রতিকূল পরিবেশের জন্য কোনো জীব বসবাস করতে পারে না, সেই অংশকে প্যারাবায়োস্ফিয়ার বলে।'},
+      {q: 'প্রবহমান জল যথা- নদী বা প্রস্রবণের বাস্তুতন্ত্রকে এবং পুকুর বা হ্রদের স্থির জলের বাস্তুতন্ত্রকে যথাক্রমে কী বলা হয়?', opts: ['লোটিক এবং লেনটিক', 'লেনটিক এবং লোটিক', 'নেরিটীয় এবং পেলজিক', 'কৃত্রিম এবং প্রাকৃতিক'], ans: 0, exp: 'প্রবহমান জল (নদী বা প্রস্রবণ)-এর বাস্তুতন্ত্র লোটিক (lotic) বাস্তুতন্ত্ররূপে পরিচিত। অপরপক্ষে পুকুর, বিল বা হ্রদের স্থির জলের বাস্তুতন্ত্রকে লেনটিক (lentic) বাস্তুতন্ত্র বলে।'},
+      {q: 'বাস্তুবিদ্যার যে শাখায় একটি নির্দিষ্ট প্রজাতির সঙ্গে পরিবেশের সম্পর্ক নিয়ে এবং যে শাখায় একটি সম্পূর্ণ জীবসম্প্রদায়ের সঙ্গে পরিবেশের সম্পর্ক নিয়ে আলোচনা করা হয়, তাদের যথাক্রমে কী বলে?', opts: ['সিনইকোলজি এবং অটইকোলজি', 'অটইকোলজি এবং সিনইকোলজি', 'ইকোসিস্টেম এবং বায়োম', 'বায়োটা এবং নিসে'], ans: 1, exp: 'যে বাস্তুবিদ্যায় একটি প্রজাতির সঙ্গে পরিবেশের সম্পর্ক আলোচিত হয় তাকে অটইকোলজি এবং একটি সম্পূর্ণ জীবসম্প্রদায়ের সঙ্গে সম্পর্ক আলোচিত হলে তাকে সিনইকোলজি বলে।'},
+      {q: 'আয়তনের দিক থেকে পৃথিবীর দশটি বৃহৎ তৃণভূমির মধ্যে প্রথম বা বৃহত্তম তৃণভূমি কোনটি?', opts: ['উত্তর আমেরিকার গ্রেট প্লেনস', 'আর্জেন্টিনার পম্পাস', 'তিব্বতের নাকু (Naku) তৃণভূমি', 'অস্ট্রেলিয়ার সাভানা'], ans: 2, exp: 'পৃথিবীর দশটি বৃহৎ তৃণভূমির মধ্যে প্রথম বা বৃহত্তম হলো তিব্বতের নাকু তৃণভূমি। দ্বিতীয় স্থানে রয়েছে উত্তর আমেরিকার গ্রেট প্লেনস।'},
+      {q: 'গঙ্গা-ব্রহ্মপুত্রের নবীন বদ্বীপে অবস্থিত পৃথিবীর অন্যতম বৃহত্তম ম্যানগ্রোভ বাস্তুতন্ত্র বা অরণ্যটির নাম কী?', opts: ['ভিতরকণিকা', 'সুন্দরবন (Sundarban)', 'পিচাভরম', 'গাল্ফ অফ মান্নার'], ans: 1, exp: 'গঙ্গা-ব্রহ্মপুত্রের নবীন বদ্বীপ সুন্দরবন (৯৬৩০ বর্গকিমি) হলো পৃথিবীর অন্যতম বৃহত্তম ম্যানগ্রোভ বাস্তুতন্ত্র বা অরণ্য।'},
+      {q: 'পুকুর বা জলাশয়ের বাস্তুতন্ত্রে প্রাণী প্ল্যাঙ্কটন, জলজ কীটপতঙ্গ ইত্যাদি প্রাণীরা কোন্ স্তরের খাদক?', opts: ['উৎপাদক', 'প্রথম শ্রেণির খাদক', 'দ্বিতীয় শ্রেণির খাদক', 'বিয়োজক'], ans: 1, exp: 'পুকুর বা জলাশয়ের বাস্তুতন্ত্রে উদ্ভিদ প্ল্যাঙ্কটন বা শ্যাওলা হলো উৎপাদক এবং প্রাণী প্ল্যাঙ্কটন, জলজ কীটপতঙ্গ ইত্যাদি হলো প্রাথমিক বা প্রথম শ্রেণির খাদক।'},
+      {q: 'দুটি পাশাপাশি বাস্তুতন্ত্রের মধ্যে কোনো নির্দিষ্ট সীমারেখা না থেকে যখন একটি থেকে অন্যটিতে জীব সম্প্রদায়ের ধীর পরিবর্তন লক্ষ করা যায়, তাকে কী বলে?', opts: ['ইকোটোন', 'ইকোক্লাইন (Ecocline)', 'নিসে', 'বায়োম'], ans: 1, exp: 'যখন দুটি পাশাপাশি বাস্তুতন্ত্রে কোনো নির্দিষ্ট সীমারেখা থাকে না, তখন একটি থেকে অন্যটিতে জীব সম্প্রদায়ের যে ধীর পরিবর্তন বা ঢাল দেখা যায়, তাকে ইকোক্লাইন বলে।'},
+      {q: 'দুটি বাস্তুতন্ত্রের মিলনস্থানে (Ecotone) প্রজাতি বৈচিত্র্যের বৃদ্ধিকে কী বলে?', opts: ['প্রান্ত প্রভাব বা এজ এফেক্ট (Edge Effect)', 'ক্লাইম্যাক্স কমিউনিটি', 'হোমিওস্টেসিস', 'জীববিবর্ধন'], ans: 0, exp: 'দুটি বাস্তুতন্ত্রের মিলনস্থানে (Ecotone) অপেক্ষাকৃত অধিক সংখ্যক প্রজাতির অবস্থানকে \'Edge Effect\' বা প্রান্ত প্রভাব বলে।'},
+      {q: 'পরিবর্তিত পরিবেশে কোনো বাস্তুতন্ত্রের পুনরায় নিজের পূর্বাবস্থায় ফিরে আসার সামর্থ্যকে কী বলে?', opts: ['Species Diversity', 'Power of Resilience', 'Dynamic Equilibrium', 'Positive feedback'], ans: 1, exp: 'একটি বাস্তুতন্ত্রের ভারসাম্য বিঘ্নিত হলে সেটি তার স্বাভাবিক অবস্থায় ফিরে আসার চেষ্টা করে। এই সামর্থ্যকে Power of Resilience বলে।'},
+      {q: 'কোন বাস্তুতন্ত্রে প্রজাতির বৈচিত্র্য (Species Diversity) সর্বাধিক হওয়ায় তা অত্যন্ত সুস্থির প্রকৃতির হয়?', opts: ['মরুভূমির বাস্তুতন্ত্র', 'তুন্দ্রা বাস্তুতন্ত্র', 'ক্রান্তীয় বৃষ্টির অরণ্য (Tropical Rain Forest)', 'সাভানা তৃণভূমি'], ans: 2, exp: 'ক্রান্তীয় বৃষ্টির অরণ্যে প্রজাতির বৈচিত্র্য সর্বাধিক। তাই এইরূপ বাস্তুতন্ত্রে জটিল খাদ্যজালিকা থাকে বলে এটি চিরকাল অত্যন্ত সুস্থির থাকে।'},
+      {q: 'কোনো প্রাণীর পুষ্টিলাভের নির্দিষ্ট এলাকা বা পরিবেশের কার্যকরী অবস্থানকে ওই প্রাণীর কী বলা হয়?', opts: ['ইকোলজিক্যাল নিসে (Ecological Niche)', 'হ্যাবিট্যাট', 'ইকোটোপ', 'ইকোস্ফিয়ার'], ans: 0, exp: 'উৎপাদক থেকে শুরু করে খাদকরা পুষ্টি সংগ্রহের জন্য নির্দিষ্ট কিছু প্রাণী বা এলাকা বেছে নেয়। এই নির্দিষ্ট এলাকাকে ইকোলজিক্যাল নিসে বলা হয়।'},
+      {q: 'জীবের শুষ্ক ওজনের (Dry weight) পরিমাণকে পুষ্টিস্তর অনুসারে পরপর সাজালে কোন পিরামিড গঠিত হয়?', opts: ['সংখ্যা পিরামিড', 'শক্তি পিরামিড', 'জীবভর পিরামিড (Biomass Pyramid)', 'উলটানো পিরামিড'], ans: 2, exp: 'জীবের শুষ্ক ওজনের পরিমাণকে পুষ্টিস্তর অনুসারে সাজালে জীবভর পিরামিড গঠিত হয়।'},
+      {q: 'বাস্তুতন্ত্রে শক্তির প্রবাহ তাপগতিবিদ্যার কোন সূত্র দুটিকে অনুসরণ করে?', opts: ['শূন্যতম ও প্রথম সূত্র', 'প্রথম ও দ্বিতীয় সূত্র', 'কেবল তৃতীয় সূত্র', 'দ্বিতীয় ও তৃতীয় সূত্র'], ans: 1, exp: 'বাস্তুতন্ত্রে সৌরশক্তির রূপান্তর এবং এক পুষ্টিস্তর থেকে অন্য স্তরে প্রবাহের সময় শক্তির অপচয় ঘটা—এই প্রক্রিয়াগুলি তাপগতিবিদ্যার প্রথম ও দ্বিতীয় সূত্রকে কঠোরভাবে অনুসরণ করে।'},
+      {q: 'সবুজ উদ্ভিদ সালোকসংশ্লেষ প্রক্রিয়ায় মোট যে পরিমাণ সৌরশক্তি শর্করাতে আবদ্ধ করে, তাকে কী বলে?', opts: ['নিট প্রাথমিক উৎপাদন (NPP)', 'মোট প্রাথমিক উৎপাদন (Gross Primary Production বা GPP)', 'শ্বসন শক্তি (R)', 'গৌণ উৎপাদন'], ans: 1, exp: 'সালোকসংশ্লেষ প্রক্রিয়ার মাধ্যমে সবুজ উদ্ভিদ মোট যে পরিমাণ সৌরশক্তি শর্করাতে আবদ্ধ করে নিজের দেহে উৎপাদন করে, তাকে মোট প্রাথমিক উৎপাদন বা GPP বলে।'},
+      {q: 'খাদ্যশৃঙ্খলের মাধ্যমে ক্ষতিকারক রাসায়নিক উপাদান জীবদেহে পুঞ্জীভূত হয়ে পরবর্তী খাদ্যস্তরে এর মাত্রা ক্রমশ বাড়তে থাকার ঘটনাকে কী বলে?', opts: ['জীববিবর্ধন (Biomagnification)', 'হোমিওস্টেসিস', 'জৈব সঞ্চয়', 'এজ এফেক্ট'], ans: 0, exp: 'খাদ্যশৃঙ্খলের মাধ্যমে বিভিন্ন ক্ষতিকারক রাসায়নিক উপাদানগুলি জীবদেহে পুঞ্জীভূত হয় এবং পরবর্তী খাদ্যস্তরে এই কেন্দ্রীভবনের পরিমাণ ক্রমশ বাড়তে থাকে। এই ক্রমিক বৃদ্ধিকে জীববিবর্ধন (Biomagnification) বলে।'}
+    ]
+  }
+};
+
+// ============================================================
+//  গ্লোবাল ভেরিয়েবল
+// ============================================================
+const LABELS = ['ক', 'খ', 'গ', 'ঘ'];
+let currentSetId = 1;
+let cur = 0, score = 0, wrong = 0, answered = false, timerInterval, timeLeft = 10 * 60;
+let userAnswers = [];
+let isLoggedIn = false;
+let currentUser = null;
+let pendingSetId = null;
+
+// ============================================================
+//  হাব পেজ বিল্ড
+// ============================================================
+function buildHub() {
+  const grid = document.getElementById('setGrid');
+  grid.innerHTML = '';
+  for (let i = 1; i <= TOTAL_SETS; i++) {
+    const set = allSets[i];
+    const card = document.createElement('div');
+    card.className = 'set-card';
+    
+    // Check if user is logged in and get attempt count
+    let attemptCount = 0;
+    let isLocked = false;
+    if (currentUser) {
+      attemptCount = getAttemptCount(currentUser.username, i);
+      isLocked = attemptCount >= MAX_ATTEMPTS;
+      if (isLocked) card.classList.add('locked');
+    }
+    
+    card.innerHTML = `
+      <div class="icon">${set.icon}</div>
+      <div class="set-num">${set.name}</div>
+      <div class="set-title">${set.topic}</div>
+      <div class="set-meta"><span>১৫ প্রশ্ন</span><span>১০ মিনিট</span></div>
+      ${currentUser ? `<div class="attempt-badge">${isLocked ? '🔒 সম্পূর্ণ' : attemptCount + '/' + MAX_ATTEMPTS}</div>` : ''}
+    `;
+    card.onclick = () => {
+      if (isLocked) {
+        alert(`⚠️ আপনি ${set.name} এর সর্বোচ্চ ${MAX_ATTEMPTS} বার Test দিয়েছেন।`);
+        return;
+      }
+      selectSet(i);
+    };
+    grid.appendChild(card);
+  }
+}
+
+function showHub() {
+  document.getElementById('hubPage').classList.remove('hidden');
+  document.getElementById('testArea').classList.add('hidden');
+  document.getElementById('resultWrap').classList.remove('show');
+  document.getElementById('timerBox').classList.remove('danger');
+  clearInterval(timerInterval);
+  if (currentUser) {
+    document.getElementById('hubUserInfo').innerHTML = `👤 ${currentUser.username} — Test দিতে সেট সিলেক্ট করো।`;
+  } else {
+    document.getElementById('hubUserInfo').innerHTML = '';
+  }
+  buildHub();
+}
+
+function goToHub() {
+  document.getElementById('testArea').classList.add('hidden');
+  document.getElementById('resultWrap').classList.remove('show');
+  document.getElementById('hubPage').classList.remove('hidden');
+  document.getElementById('timerBox').classList.remove('danger');
+  clearInterval(timerInterval);
+  isLoggedIn = false;
+  currentUser = null;
+  buildHub();
+}
+
+// ============================================================
+//  সেট সিলেক্ট - সবসময় লগইন চেক
+// ============================================================
+function selectSet(id) {
+  currentSetId = id;
+  const set = allSets[id];
+  pendingSetId = id;
+  document.getElementById('loginSetName').textContent = `📚 ${set.name} — ${set.topic}`;
+  
+  // Check if already logged in
+  if (currentUser) {
+    const attemptCount = getAttemptCount(currentUser.username, id);
+    if (attemptCount >= MAX_ATTEMPTS) {
+      alert(`⚠️ আপনি ${set.name} এর সর্বোচ্চ ${MAX_ATTEMPTS} বার Test দিয়েছেন।`);
+      return;
+    }
+    startQuiz(id);
+    return;
+  }
+  
+  document.getElementById('loginOverlay').classList.add('active');
+  document.getElementById('loginUsername').value = '';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('loginError').style.display = 'none';
+  document.getElementById('limitInfo').style.display = 'none';
+  document.getElementById('loginBtn').disabled = false;
+  document.getElementById('loginUsername').focus();
+}
+
+// ============================================================
+//  লগইন ফাংশন
+// ============================================================
+function doLoginFromSet() {
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
+  const errorEl = document.getElementById('loginError');
+  const limitInfo = document.getElementById('limitInfo');
+  const loginBtn = document.getElementById('loginBtn');
+
+  if (!username || !password) {
+    errorEl.textContent = '❌ দয়া করে ইউজারনেম ও পাসওয়ার্ড দিন।';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  const user = userData.find(u => u.username === username && u.password === password);
+  if (user) {
+    const setId = pendingSetId || currentSetId;
+    const setAttempts = getAttemptCount(username, setId);
+    if (setAttempts >= MAX_ATTEMPTS) {
+      limitInfo.style.display = 'block';
+      document.getElementById('limitMsg').textContent = `আপনি এই অ্যাকাউন্ট দিয়ে ${allSets[setId].name} এর সর্বোচ্চ ${MAX_ATTEMPTS} বার Test দিয়েছেন। আর Test দেওয়া সম্ভব নয়।`;
+      errorEl.style.display = 'none';
+      loginBtn.disabled = true;
+      return;
+    }
+    
+    isLoggedIn = true;
+    currentUser = user;
+    errorEl.style.display = 'none';
+    limitInfo.style.display = 'none';
+    loginBtn.disabled = false;
+    document.getElementById('loginOverlay').classList.remove('active');
+    
+    document.getElementById('hubUserInfo').innerHTML = `👤 ${currentUser.username} — Test দিতে সেট সিলেক্ট করো।`;
+    
+    startQuiz(pendingSetId || currentSetId);
+  } else {
+    errorEl.textContent = '❌ ভুল ইউজারনেম বা পাসওয়ার্ড। আবার চেষ্টা করুন।';
+    errorEl.style.display = 'block';
+    limitInfo.style.display = 'none';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('loginPassword').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doLoginFromSet();
+  });
+  document.getElementById('loginUsername').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doLoginFromSet();
+  });
+  buildHub();
+  document.getElementById('hubPage').classList.remove('hidden');
+  document.getElementById('testArea').classList.add('hidden');
+  document.getElementById('resultWrap').classList.remove('show');
+});
+
+// ============================================================
+//  কুইজ ফাংশন
+// ============================================================
+function startQuiz(setId) {
+  if (!isLoggedIn || !currentUser) return;
+  
+  const setAttempts = getAttemptCount(currentUser.username, setId);
+  if (setAttempts >= MAX_ATTEMPTS) {
+    alert(`⚠️ আপনি এই সেটের সর্বোচ্চ ${MAX_ATTEMPTS} বার Test দিয়েছেন।`);
+    return;
+  }
+  
+  incrementAttempt(currentUser.username, setId);
+  
+  cur = 0; score = 0; wrong = 0; answered = false;
+  timeLeft = 10 * 60; userAnswers = [];
+  document.getElementById('hubPage').classList.add('hidden');
+  document.getElementById('resultWrap').classList.remove('show');
+  document.getElementById('testArea').classList.remove('hidden');
+  document.getElementById('timerBox').classList.remove('danger');
+  
+  const set = allSets[setId];
+  document.getElementById('testSetLabel').textContent = set.name;
+  document.getElementById('testSetName').textContent = 'ভূগোল';
+  document.getElementById('testTopic').textContent = set.topic;
+  
+  // Update retry button
+  document.getElementById('retryBtn').disabled = false;
+  
+  clearInterval(timerInterval);
+  timerInterval = setInterval(tick, 1000);
+  loadQ();
+}
+
+function tick() {
+  timeLeft--;
+  const m = Math.floor(timeLeft / 60);
+  const s = timeLeft % 60;
+  document.getElementById('timerDisplay').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+  if (timeLeft <= 60) document.getElementById('timerBox').classList.add('danger');
+  if (timeLeft <= 0) { clearInterval(timerInterval); showResult(); }
+}
+
+function loadQ() {
+  answered = false;
+  const set = allSets[currentSetId];
+  const q = set.questions[cur];
+  document.getElementById('qNum').textContent = 'প্রশ্ন ' + (cur + 1) + ' / ' + set.questions.length;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('progressFill').style.width = ((cur + 1) / set.questions.length * 100) + '%';
+  document.getElementById('nextBtn').disabled = true;
+  document.getElementById('nextBtn').textContent = cur === set.questions.length - 1 ? 'ফলাফল দেখো' : 'পরবর্তী →';
+  document.getElementById('nextBtn').onclick = nextQ;
+  document.getElementById('explanation').classList.remove('show');
+
+  const opts = document.getElementById('qOpts');
+  opts.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = '<div class="opt-circle">' + LABELS[i] + '</div><div class="opt-text">' + o + '</div>';
+    btn.onclick = () => answer(i);
+    opts.appendChild(btn);
+  });
+}
+
+function answer(i) {
+  if (answered) return;
+  answered = true;
+  const set = allSets[currentSetId];
+  const q = set.questions[cur];
+  userAnswers[cur] = i;
+  const btns = document.querySelectorAll('.opt');
+  btns.forEach(b => b.classList.add('disabled'));
+  btns[q.ans].classList.add('correct');
+  if (i !== q.ans) { btns[i].classList.add('wrong'); wrong++; }
+  else score++;
+  document.getElementById('scoreShow').textContent = 'সঠিক: ' + score + ' | ভুল: ' + wrong;
+  document.getElementById('explanationText').innerHTML = '<strong>ব্যাখ্যা:</strong> ' + q.exp;
+  document.getElementById('explanation').classList.add('show');
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQ() {
+  const set = allSets[currentSetId];
+  cur++;
+  if (cur >= set.questions.length) { clearInterval(timerInterval); showResult(); return; }
+  loadQ();
+}
+
+function showResult() {
+  document.getElementById('testArea').classList.add('hidden');
+  const rw = document.getElementById('resultWrap');
+  rw.classList.add('show');
+  const set = allSets[currentSetId];
+  const pct = Math.round(score / set.questions.length * 100);
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('rbCorrect').textContent = score;
+  document.getElementById('rbWrong').textContent = wrong;
+  document.getElementById('rbPct').textContent = pct + '%';
+  
+  const remaining = MAX_ATTEMPTS - (getAttemptCount(currentUser.username, currentSetId) || 0);
+  document.getElementById('attemptInfo').innerHTML = `👤 ${currentUser.username} — ${set.name}: বাকি আছে <strong>${remaining}</strong> বার Test দেওয়ার সুযোগ (সর্বোচ্চ ${MAX_ATTEMPTS} বার)`;
+  
+  // Disable retry if no attempts left
+  document.getElementById('retryBtn').disabled = remaining <= 0;
+  
+  const grades = [
+    [90, '🌟', 'অসাধারণ!'],
+    [70, '👍', 'খুব ভালো!'],
+    [50, '📚', 'ভালো চেষ্টা!'],
+    [0, '💪', 'চেষ্টা চালিয়ে যাও!']
+  ];
+  const g = grades.find(x => pct >= x[0]);
+  document.getElementById('resultIcon').textContent = g[1];
+  document.getElementById('resultGrade').textContent = g[2] + ' (' + set.topic + ')';
+}
+
+function retryQuiz() {
+  const setId = currentSetId;
+  const remaining = MAX_ATTEMPTS - (getAttemptCount(currentUser.username, setId) || 0);
+  if (remaining <= 0) {
+    alert(`⚠️ আপনি ${allSets[setId].name} এর সর্বোচ্চ ${MAX_ATTEMPTS} বার Test দিয়েছেন।`);
+    return;
+  }
+  document.getElementById('resultWrap').classList.remove('show');
+  startQuiz(setId);
+}
+
+function showReview() {
+  document.getElementById('resultWrap').classList.remove('show');
+  document.getElementById('testArea').classList.remove('hidden');
+  cur = 0;
+  loadReview();
+}
+
+function loadReview() {
+  const set = allSets[currentSetId];
+  if (cur >= set.questions.length) { 
+    document.getElementById('testArea').classList.add('hidden'); 
+    document.getElementById('resultWrap').classList.add('show'); 
+    return; 
+  }
+  const q = set.questions[cur];
+  document.getElementById('qNum').textContent = 'Review — প্রশ্ন ' + (cur + 1) + ' / ' + set.questions.length;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('progressFill').style.width = ((cur + 1) / set.questions.length * 100) + '%';
+  document.getElementById('nextBtn').disabled = false;
+  document.getElementById('nextBtn').textContent = cur === set.questions.length - 1 ? 'শেষ করো' : 'পরবর্তী →';
+  document.getElementById('nextBtn').onclick = () => { cur++; loadReview(); };
+
+  const opts = document.getElementById('qOpts');
+  opts.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt disabled';
+    if (i === q.ans) btn.classList.add('correct');
+    else if (userAnswers[cur] === i) btn.classList.add('wrong');
+    btn.innerHTML = '<div class="opt-circle">' + LABELS[i] + '</div><div class="opt-text">' + o + '</div>';
+    opts.appendChild(btn);
+  });
+
+  document.getElementById('explanationText').innerHTML = '<strong>ব্যাখ্যা:</strong> ' + q.exp;
+  document.getElementById('explanation').classList.add('show');
+  document.getElementById('scoreShow').textContent = 'সবুজ = সঠিক উত্তর';
+}
+</script>
+</body>
+</html>
